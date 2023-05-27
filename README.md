@@ -81,3 +81,4 @@ Join the discussion at [Discord](https://discord.gg/kyy5ncWsMa).
 ## Acknowledgements
 
 We'd like to thank anyone who's used or contributed to Mochi!
+ChatGPT for helping to generate this README.
