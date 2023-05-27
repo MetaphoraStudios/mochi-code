@@ -56,23 +56,33 @@ If you find a bug, open an issue in the [issue tracker](https://github.com/Metap
 
 ### Proposing Features
 
-Have an idea for a new feature? Feel free to open an issue describing your feature, how it would be used, and why you think it would be a great addition to Mochi.
+Have an idea for a new feature? Feel free to open an issue describing your
+feature, how it would be used, and why you think it would be a great addition to
+Mochi.
 
 ### Code Contributions
 
 If you'd like to contribute code, please follow these steps:
 
 1. Fork the repository.
-2. Create a new branch for your features / fixes (e.g. `git checkout -b feature/YourFeatureName`).
+2. Create a new branch for your features / fixes (e.g.
+   `git checkout -b feature/YourFeatureName`).
 3. Commit your changes (`git commit -am 'Add some feature'`).
 4. Push the changes to the branch (`git push origin feature/YourFeatureName`).
 5. Create a new Pull Request.
 
-Before contributing, please read our [Contributing Guide](https://github.com/MetaphoraStudios/mochi-code/blob/main/CONTRIBUTING.md) and [Code of Conduct](https://github.com/MetaphoraStudios/mochi-code/blob/main/CODE_OF_CONDUCT.md).
+Before contributing, please read our
+[Contributing Guide](https://github.com/MetaphoraStudios/mochi-code/blob/main/CONTRIBUTING.md)
+and
+[Code of Conduct](https://github.com/MetaphoraStudios/mochi-code/blob/main/CODE_OF_CONDUCT.md).
+
+TODO: Add development setup instructions.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/MetaphoraStudios/mochi-code/blob/main/LICENSE.md) file for details.
+This project is licensed under the MIT License - see the
+[LICENSE.md](https://github.com/MetaphoraStudios/mochi-code/blob/main/LICENSE.md)
+file for details.
 
 ## Contact
 
