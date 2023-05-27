@@ -6,6 +6,9 @@ authors = ["Diogo Neves <diogo.neves@gmail.com>"]
 readme = "README.md"
 packages = [{ include = "mochi_code" }]
 
+[tool.poetry.scripts]
+mochi = "mochi_code.ask:cli"
+
 [tool.poetry.dependencies]
 python = "^3.10"
 langchain = "^0.0.181"
