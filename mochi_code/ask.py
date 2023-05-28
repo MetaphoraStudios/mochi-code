@@ -17,11 +17,11 @@ class EmptyPromptError(Exception):
 
 def cli():
     parser = argparse.ArgumentParser()
-    parser.add_argument("prompt", type=str, help="Your non-empty prompt to run.")
+    parser.add_argument("--ask", type=str, help="Your non-empty prompt to run.")
     args = parser.parse_args()
 
-    prompt = args.prompt
-    if not prompt.strip():
+    prompt = args.ask
+    if prompt is None or not prompt.strip():
         parser.print_help()
         raise EmptyPromptError("Prompt cannot be empty.")
 
