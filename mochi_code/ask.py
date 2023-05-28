@@ -1,10 +1,12 @@
-from typing import Optional, Sequence
+"""Implements the ask command."""
+
+import argparse
+
 from langchain.llms import OpenAI
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 
 from dotenv import dotenv_values
-import argparse
 
 
 # Load keys for the different model backends. This needs to be setup separately.
@@ -12,10 +14,11 @@ keys = dotenv_values(".keys")
 
 
 class EmptyPromptError(Exception):
-    pass
+    """Raised when the prompt is empty."""
 
 
 def cli():
+    """Run the ask command from the cli (with --ask argument)."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--ask", type=str, help="Your non-empty prompt to run.")
     args = parser.parse_args()
@@ -29,6 +32,7 @@ def cli():
 
 
 def ask(prompt: str):
+    """Run the ask command."""
     chain = _create_chain()
     print(chain.run(prompt))
 
