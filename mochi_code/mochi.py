@@ -1,4 +1,5 @@
-"""Implements the ask command."""
+"""This file sets up the mochi subcommands, validates cli user input and calls
+out to the subcommands."""
 
 import argparse
 
@@ -13,22 +14,24 @@ from dotenv import dotenv_values
 keys = dotenv_values(".keys")
 
 
-class EmptyPromptError(Exception):
-    """Raised when the prompt is empty."""
-
-
 def cli():
     """Run the ask command from the cli (with --ask argument)."""
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--ask", type=str, help="Your non-empty prompt to run.")
+    parser = argparse.ArgumentParser(prog="mochi")
+    subparsers = parser.add_subparsers(title="subcommands", dest="subcommand")
+    ask_parser = subparsers.add_parser("ask", help="Ask a question to mochi.")
+    ask_parser.add_argument("prompt", type=str, help="Your non-empty prompt to run.")
     args = parser.parse_args()
 
-    prompt = args.ask
-    if prompt is None or not prompt.strip():
+    if args.subcommand == "ask":
+        prompt = args.prompt
+        if prompt is None or not prompt.strip():
+            print("issue: Prompt cannot be empty.")
+            ask_parser.print_help()
+            parser.exit(1)
+            # raise EmptyPromptError("Prompt cannot be empty.")
+        ask(prompt)
+    else:
         parser.print_help()
-        raise EmptyPromptError("Prompt cannot be empty.")
-
-    ask(prompt)
 
 
 def ask(prompt: str):
