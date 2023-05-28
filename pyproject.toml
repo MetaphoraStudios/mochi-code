@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{ include = "mochi_code" }]
 
 [tool.poetry.scripts]
-mochi = "mochi_code.ask:cli"
+mochi = "mochi_code.mochi:cli"
 
 [tool.poetry.dependencies]
 python = "^3.10"
