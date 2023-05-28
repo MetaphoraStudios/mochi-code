@@ -42,7 +42,7 @@ mochi --save-openai-key "<your openai api key>"
 Here is a simple example of how to use Mochi:
 
 ```bash
-mochi --ask "What changed since last week?"
+mochi ask "What changed since last week?"
 ```
 
 **Note: Soon, just running `mochi` will start the interactive chat interface.**
