@@ -12,11 +12,15 @@ class TestAskCli(TestCase):
         """Test that an empty prompt fails."""
         mock_ask.return_value = None
 
-        MonkeyPatch().setattr("sys.argv", ["mochi", ""])
+        MonkeyPatch().setattr("sys.argv", ["mochi"])
         with raises(EmptyPromptError):
             cli()
 
-        MonkeyPatch().setattr("sys.argv", ["mochi", "         "])
+        MonkeyPatch().setattr("sys.argv", ["mochi", "--ask", ""])
+        with raises(EmptyPromptError):
+            cli()
+
+        MonkeyPatch().setattr("sys.argv", ["mochi", "--ask", "         "])
         with raises(EmptyPromptError):
             cli()
 
@@ -26,7 +30,7 @@ class TestAskCli(TestCase):
         mock_ask.return_value = None
 
         prompt = "test"
-        MonkeyPatch().setattr("sys.argv", ["mochi", prompt])
+        MonkeyPatch().setattr("sys.argv", ["mochi", "--ask", prompt])
         cli()
 
         mock_ask.assert_called_once_with(prompt)
