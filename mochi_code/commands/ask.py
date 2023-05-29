@@ -18,12 +18,10 @@ def setup_ask_command(
     return command_name, ask_parser, run_ask_command
 
 
-def run_ask_command(args: argparse.Namespace, parser: argparse.ArgumentParser):
+def run_ask_command(args: argparse.Namespace):
     prompt = args.prompt
     if prompt is None or not prompt.strip():
-        print("issue: Prompt cannot be empty.")
-        parser.print_help()
-        parser.exit(1)
+        raise ValueError("prompt cannot be empty.")
     ask(prompt)
 
 

@@ -19,7 +19,7 @@ CommandSetupType = Callable[
     [
         argparse._SubParsersAction[argparse.ArgumentParser],
     ],
-    tuple[str, argparse.ArgumentParser, Callable],
+    tuple[str, argparse.ArgumentParser, Callable[[argparse.Namespace], None]],
 ]
 
 # commands includes a list of setup functions for each command.
@@ -41,10 +41,22 @@ def cli():
 
     for command_name, command_parser, command in command_parsers:
         if args.subcommand == command_name:
-            command(command_parser)
+            _run_command(command, args, command_parser)
             break
     else:
         root_parser.print_help()
+
+
+def _run_command(
+    command, args: argparse.Namespace, command_parser: argparse.ArgumentParser
+):
+    """Run the command and exit if an error occurred."""
+    try:
+        command(args)
+    except Exception as e:
+        print(f"issue: {e}")
+        command_parser.print_help()
+        command_parser.exit(1)
 
 
 if __name__ == "__main__":
