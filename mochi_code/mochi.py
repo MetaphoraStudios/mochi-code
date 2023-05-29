@@ -34,16 +34,18 @@ def cli():
     root_parser = argparse.ArgumentParser(prog="mochi")
     subparsers = root_parser.add_subparsers(title="subcommands", dest="subcommand")
 
-    command_parsers = [
-        parser for setup in commands if (parser := setup(subparsers)) is not None
-    ]
+    command_parsers = {
+        # command_name: (command_parser, command)
+        [parser[0]]: (parser[1], parser[2])
+        for setup in commands
+        if (parser := setup(subparsers)) is not None
+    }
 
     args = root_parser.parse_args()
 
-    for command_name, command_parser, command in command_parsers:
-        if args.subcommand == command_name:
-            _run_command(command, args, command_parser)
-            break
+    if args.subcommand in command_parsers:
+        command_parser, command = command_parsers[args.subcommand]
+        _run_command(command, args, command_parser)
     else:
         root_parser.print_help()
 
