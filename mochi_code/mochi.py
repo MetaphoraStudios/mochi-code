@@ -27,6 +27,7 @@ def cli():
     if args.subcommand == ask_name:
         _run_command(run_ask_command, args, ask_parser)
     else:
+        print("Here will live the chat mode, but not yet...")
         root_parser.print_help()
 
 
