@@ -1387,6 +1387,20 @@ files = [
 ]
 
 [[package]]
+name = "yapf"
+version = "0.33.0"
+description = "A formatter for Python code."
+optional = false
+python-versions = "*"
+files = [
+    {file = "yapf-0.33.0-py2.py3-none-any.whl", hash = "sha256:4c2b59bd5ffe46f3a7da48df87596877189148226ce267c16e8b44240e51578d"},
+    {file = "yapf-0.33.0.tar.gz", hash = "sha256:da62bdfea3df3673553351e6246abed26d9fe6780e548a5af9e70f6d2b4f5b9a"},
+]
+
+[package.dependencies]
+tomli = ">=2.0.1"
+
+[[package]]
 name = "yarl"
 version = "1.9.2"
 description = "Yet another URL library"
@@ -1476,4 +1490,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "e39d10c921609e981b4f45bcc2d977b3e1b73b35249e134d9863c791299242a5"
+content-hash = "0fdaf27835622365028937ef6ecee905a9beb3074e214fec087aef9057dd3541"

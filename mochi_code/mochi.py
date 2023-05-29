@@ -9,17 +9,18 @@ from typing import Callable
 from mochi_code.commands import setup_ask_arguments
 from mochi_code.commands import run_ask_command
 
-
 CommandType = Callable[[argparse.Namespace], None]
 
 
 def cli():
     """Setup the cli environment and run the selected subcommand."""
     root_parser = argparse.ArgumentParser(prog="mochi")
-    subparsers = root_parser.add_subparsers(title="subcommands", dest="subcommand")
+    subparsers = root_parser.add_subparsers(title="subcommands",
+                                            dest="subcommand")
 
     ask_name = "ask"
-    ask_parser = subparsers.add_parser(ask_name, help="Ask a question to mochi.")
+    ask_parser = subparsers.add_parser(ask_name,
+                                       help="Ask a question to mochi.")
     setup_ask_arguments(ask_parser)
 
     args = root_parser.parse_args()
