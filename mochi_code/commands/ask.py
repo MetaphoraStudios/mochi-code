@@ -1,7 +1,9 @@
+"""The ask command. This command is used to ask mochi a single question."""
+
 import argparse
 from typing import Callable
 from dotenv import dotenv_values
-from langchain import LLMChain, PromptTemplate
+from langchain import LLMChain, PromptTemplate, OpenAI
 
 # Load keys for the different model backends. This needs to be setup separately.
 keys = dotenv_values(".keys")
@@ -19,6 +21,7 @@ def setup_ask_command(
 
 
 def run_ask_command(args: argparse.Namespace):
+    """Run the ask command."""
     prompt = args.prompt
     if prompt is None or not prompt.strip():
         raise ValueError("prompt cannot be empty.")

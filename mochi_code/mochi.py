@@ -53,8 +53,8 @@ def _run_command(
     """Run the command and exit if an error occurred."""
     try:
         command(args)
-    except Exception as e:
-        print(f"issue: {e}")
+    except Exception as error:  # pylint: disable=broad-except
+        print(f"issue: {error}")
         command_parser.print_help()
         command_parser.exit(1)
 
