@@ -1,56 +1,51 @@
 """This file sets up the mochi subcommands, validates cli user input and calls
-out to the subcommands."""
+out to the subcommands.
+
+Subcommands are setup by adding a setup function to the commands list, which
+will add the sub parsers but also return the command function to run when the
+user calls the subcommand.
+
+The setup function tells the cli what subcommand name to match, what parser to
+use and what function to call when the subcommand is called.
+"""
 
 import argparse
+from typing import Callable
 
-from langchain.llms import OpenAI
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
-
-from dotenv import dotenv_values
+from mochi_code.commands import setup_ask_command
 
 
-# Load keys for the different model backends. This needs to be setup separately.
-keys = dotenv_values(".keys")
+CommandSetupType = Callable[
+    [
+        argparse._SubParsersAction[argparse.ArgumentParser],
+    ],
+    tuple[str, argparse.ArgumentParser, Callable],
+]
+
+# commands includes a list of setup functions for each command.
+# The setup function is responsible for adding the expected arguments for the
+# command.
+commands: list[CommandSetupType] = [setup_ask_command]
 
 
 def cli():
-    """Run the ask command from the cli (with --ask argument)."""
-    parser = argparse.ArgumentParser(prog="mochi")
-    subparsers = parser.add_subparsers(title="subcommands", dest="subcommand")
-    ask_parser = subparsers.add_parser("ask", help="Ask a question to mochi.")
-    ask_parser.add_argument("prompt", type=str, help="Your non-empty prompt to run.")
-    args = parser.parse_args()
+    """Setup the cli environment and run the selected subcommand."""
+    root_parser = argparse.ArgumentParser(prog="mochi")
+    subparsers = root_parser.add_subparsers(title="subcommands", dest="subcommand")
 
-    if args.subcommand == "ask":
-        prompt = args.prompt
-        if prompt is None or not prompt.strip():
-            print("issue: Prompt cannot be empty.")
-            ask_parser.print_help()
-            parser.exit(1)
-            # raise EmptyPromptError("Prompt cannot be empty.")
-        ask(prompt)
+    command_parsers = [
+        parser for setup in commands if (parser := setup(subparsers)) is not None
+    ]
+
+    args = root_parser.parse_args()
+
+    for command_name, command_parser, command in command_parsers:
+        if args.subcommand == command_name:
+            command(command_parser)
+            break
     else:
-        parser.print_help()
+        root_parser.print_help()
 
 
-def ask(prompt: str):
-    """Run the ask command."""
-    chain = _create_chain()
-    print(chain.run(prompt))
-
-
-def _create_chain() -> LLMChain:
-    llm = OpenAI(temperature=0.9, openai_api_key=keys["OPENAI_API_KEY"])  # type: ignore
-    prompt = PromptTemplate(
-        input_variables=["user_prompt"],
-        template="""You are an great software engineer helping other engineers.
-        Whenever possible provide code examples, prioritise copying code from 
-        the following prompt (if available). If you're creating a function or 
-        command, please show how to call it.
-        Keep answers related to code, if you think the query is not related to 
-        code, please ask to clarify, provide more context or rephrase the query,
-        but keep it very polite and friendly, or create a pun with it.
-        Please answer this query: '{user_prompt}'""",
-    )
-    return LLMChain(llm=llm, prompt=prompt)
+if __name__ == "__main__":
+    cli()
