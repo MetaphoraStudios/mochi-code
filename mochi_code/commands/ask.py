@@ -1,8 +1,6 @@
 """The ask command. This command is used to ask mochi a single question."""
 
 import argparse
-from typing import Any
-from typing import Callable
 from dotenv import dotenv_values
 from langchain import LLMChain, PromptTemplate, OpenAI
 
@@ -10,22 +8,19 @@ from langchain import LLMChain, PromptTemplate, OpenAI
 keys = dotenv_values(".keys")
 
 
-def setup_ask_command(
-    subparsers: Any,
-) -> tuple[str, argparse.ArgumentParser, Callable]:
-    """Setup the ask command."""
-    command_name = "ask"
-    ask_parser = subparsers.add_parser(command_name, help="Ask a question to mochi.")
-    ask_parser.add_argument("prompt", type=str, help="Your non-empty prompt to run.")
-
-    return command_name, ask_parser, run_ask_command
+def setup_ask_arguments(
+    parser: argparse.ArgumentParser,
+):
+    """Setup the parser with the ask command arguments."""
+    parser.add_argument("prompt", type=str, help="Your non-empty prompt to run.")
 
 
 def run_ask_command(args: argparse.Namespace):
-    """Run the ask command."""
+    """Run the ask command with the provided arguments."""
     prompt = args.prompt
     if prompt is None or not prompt.strip():
         raise ValueError("prompt cannot be empty.")
+
     ask(prompt)
 
 
