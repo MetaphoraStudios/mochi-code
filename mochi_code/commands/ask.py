@@ -1,8 +1,10 @@
 """The ask command. This command is used to ask mochi a single question."""
 
 import argparse
+
 from dotenv import dotenv_values
-from langchain import LLMChain, PromptTemplate, OpenAI
+from langchain import LLMChain, OpenAI, PromptTemplate
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
 # Load keys for the different model backends. This needs to be setup separately.
 keys = dotenv_values(".keys")
@@ -27,11 +29,13 @@ def run_ask_command(args: argparse.Namespace):
 def ask(prompt: str):
     """Run the ask command."""
     chain = _create_chain()
-    print(chain.run(prompt))
+    chain.run(prompt)
 
 
 def _create_chain() -> LLMChain:
-    llm = OpenAI(temperature=0.9,
+    llm = OpenAI(streaming=True,
+                 callbacks=[StreamingStdOutCallbackHandler()],
+                 temperature=0.9,
                  openai_api_key=keys["OPENAI_API_KEY"])  # type: ignore
     prompt = PromptTemplate(
         input_variables=["user_prompt"],
