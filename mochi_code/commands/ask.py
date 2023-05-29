@@ -1,33 +1,31 @@
-"""Implements the ask command."""
+"""The ask command. This command is used to ask mochi a single question."""
 
 import argparse
-
-from langchain.llms import OpenAI
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
-
+from typing import Any
+from typing import Callable
 from dotenv import dotenv_values
-
+from langchain import LLMChain, PromptTemplate, OpenAI
 
 # Load keys for the different model backends. This needs to be setup separately.
 keys = dotenv_values(".keys")
 
 
-class EmptyPromptError(Exception):
-    """Raised when the prompt is empty."""
+def setup_ask_command(
+    subparsers: Any,
+) -> tuple[str, argparse.ArgumentParser, Callable]:
+    """Setup the ask command."""
+    command_name = "ask"
+    ask_parser = subparsers.add_parser(command_name, help="Ask a question to mochi.")
+    ask_parser.add_argument("prompt", type=str, help="Your non-empty prompt to run.")
+
+    return command_name, ask_parser, run_ask_command
 
 
-def cli():
-    """Run the ask command from the cli (with --ask argument)."""
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--ask", type=str, help="Your non-empty prompt to run.")
-    args = parser.parse_args()
-
-    prompt = args.ask
+def run_ask_command(args: argparse.Namespace):
+    """Run the ask command."""
+    prompt = args.prompt
     if prompt is None or not prompt.strip():
-        parser.print_help()
-        raise EmptyPromptError("Prompt cannot be empty.")
-
+        raise ValueError("prompt cannot be empty.")
     ask(prompt)
 
 
