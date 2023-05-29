@@ -6,8 +6,7 @@ It serves as a router to the different subcommands.
 import argparse
 from typing import Callable
 
-from mochi_code.commands import setup_ask_arguments
-from mochi_code.commands import run_ask_command
+from mochi_code.commands import run_ask_command, setup_ask_arguments
 
 CommandType = Callable[[argparse.Namespace], None]
 
