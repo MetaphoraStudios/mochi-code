@@ -43,9 +43,10 @@ def _create_chain() -> LLMChain:
         Whenever possible provide code examples, prioritise copying code from 
         the following prompt (if available). If you're creating a function or 
         command, please show how to call it.
-        Keep answers related to code, if you think the query is not related to 
-        code, please ask to clarify, provide more context or rephrase the query,
-        but keep it very polite and friendly, or create a pun with it.
+        It's very important you keep answers related to code, if you think the 
+        query is not related to code, please ask to clarify, provide more 
+        context or rephrase the query, but keep it very polite and friendly, or 
+        create a pun with it.
         Please answer this query: '{user_prompt}'""",
     )
     return LLMChain(llm=llm, prompt=prompt)
