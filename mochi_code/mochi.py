@@ -6,7 +6,7 @@ It serves as a router to the different subcommands.
 import argparse
 from typing import Callable
 
-from mochi_code.commands import setup_ask_command
+from mochi_code.commands import setup_ask_arguments
 from mochi_code.commands import run_ask_command
 
 
@@ -17,10 +17,14 @@ def cli():
     """Setup the cli environment and run the selected subcommand."""
     root_parser = argparse.ArgumentParser(prog="mochi")
     subparsers = root_parser.add_subparsers(title="subcommands", dest="subcommand")
-    ask_parser: argparse.ArgumentParser = setup_ask_command("ask", subparsers)
+
+    ask_name = "ask"
+    ask_parser = subparsers.add_parser(ask_name, help="Ask a question to mochi.")
+    setup_ask_arguments(ask_parser)
+
     args = root_parser.parse_args()
 
-    if args.subcommand == "ask":
+    if args.subcommand == ask_name:
         _run_command(run_ask_command, args, ask_parser)
     else:
         root_parser.print_help()
