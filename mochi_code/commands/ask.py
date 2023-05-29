@@ -1,6 +1,7 @@
 """The ask command. This command is used to ask mochi a single question."""
 
 import argparse
+from typing import Any
 from typing import Callable
 from dotenv import dotenv_values
 from langchain import LLMChain, PromptTemplate, OpenAI
@@ -10,7 +11,7 @@ keys = dotenv_values(".keys")
 
 
 def setup_ask_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    subparsers: Any,
 ) -> tuple[str, argparse.ArgumentParser, Callable]:
     """Setup the ask command."""
     command_name = "ask"

@@ -11,13 +11,14 @@ use and what function to call when the subcommand is called.
 
 import argparse
 from typing import Callable
+from typing import Any
 
 from mochi_code.commands import setup_ask_command
 
 
 CommandSetupType = Callable[
     [
-        argparse._SubParsersAction[argparse.ArgumentParser],
+        Any,
     ],
     tuple[str, argparse.ArgumentParser, Callable[[argparse.Namespace], None]],
 ]
