@@ -8,11 +8,11 @@ from langchain import LLMChain, PromptTemplate, OpenAI
 keys = dotenv_values(".keys")
 
 
-def setup_ask_arguments(
-    parser: argparse.ArgumentParser,
-):
+def setup_ask_arguments(parser: argparse.ArgumentParser,):
     """Setup the parser with the ask command arguments."""
-    parser.add_argument("prompt", type=str, help="Your non-empty prompt to run.")
+    parser.add_argument("prompt",
+                        type=str,
+                        help="Your non-empty prompt to run.")
 
 
 def run_ask_command(args: argparse.Namespace):
@@ -31,7 +31,8 @@ def ask(prompt: str):
 
 
 def _create_chain() -> LLMChain:
-    llm = OpenAI(temperature=0.9, openai_api_key=keys["OPENAI_API_KEY"])  # type: ignore
+    llm = OpenAI(temperature=0.9,
+                 openai_api_key=keys["OPENAI_API_KEY"])  # type: ignore
     prompt = PromptTemplate(
         input_variables=["user_prompt"],
         template="""You are an great software engineer helping other engineers.
