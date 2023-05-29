@@ -2,7 +2,6 @@
 
 import argparse
 from typing import Any
-from typing import Callable
 from dotenv import dotenv_values
 from langchain import LLMChain, PromptTemplate, OpenAI
 
@@ -11,14 +10,13 @@ keys = dotenv_values(".keys")
 
 
 def setup_ask_command(
+    command_name: str,
     subparsers: Any,
-) -> tuple[str, argparse.ArgumentParser, Callable]:
+) -> argparse.ArgumentParser:
     """Setup the ask command."""
-    command_name = "ask"
     ask_parser = subparsers.add_parser(command_name, help="Ask a question to mochi.")
     ask_parser.add_argument("prompt", type=str, help="Your non-empty prompt to run.")
-
-    return command_name, ask_parser, run_ask_command
+    return ask_parser
 
 
 def run_ask_command(args: argparse.Namespace):

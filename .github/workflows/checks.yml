@@ -25,8 +25,8 @@ jobs:
       - name: Analysing the code with pylint
         run: |
           poetry run pylint mochi_code/
-          poetry run mypy mochi_code/
-          poetry run mypy tests/
+          poetry run mypy --check-untyped-defs mochi_code/
+          poetry run mypy --check-untyped-defs tests/
 
       - name: Testing code with pytest
         run: |
