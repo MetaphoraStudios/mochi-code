@@ -7,6 +7,16 @@ RootHeuristicType = Callable[[str], bool]
 
 def is_project_root(path: str) -> bool:
     """Check if the path is a project root."""
+    # We implement this by looking for files that would usually only be at the
+    # root of a project.
+    # There are cases when it's ambiguous, for example, if a project contains
+    # both a frontend and backend where the frontend might define package.json
+    # and the backend might define pyproject.toml.
+    # In these cases we're conservative and return True (project root) as for
+    # now that means, at worst, Mochi will see the different areas of the
+    # project as separate projects. This should be ok as they have different
+    # tech stacks, but might miss on the overall project structure.
+    # In the future this is a good candidate for improvement!
     return os.path.exists(os.path.join(path, "pyproject.toml"))
 
 
