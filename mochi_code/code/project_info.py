@@ -17,7 +17,26 @@ def is_project_root(path: str) -> bool:
     # project as separate projects. This should be ok as they have different
     # tech stacks, but might miss on the overall project structure.
     # In the future this is a good candidate for improvement!
-    return os.path.exists(os.path.join(path, "pyproject.toml"))
+    root_filenames = [
+        "package.json",
+        "pyproject.toml",
+        "setup.py",
+        "requirements.txt",
+        ".git",
+        "gemspec",
+        "Cargo.toml",
+        "build.gradle",
+        "pom.xml",
+        "build.sbt",
+        "gradlew",
+        "haxelib.json",
+        "stack.yaml",
+        "build.zig",
+    ]
+    return any([
+        os.path.exists(os.path.join(path, filename))
+        for filename in root_filenames
+    ])
 
 
 def find_project_root(
