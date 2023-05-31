@@ -26,16 +26,18 @@ def find_project_root(
     Args:
         start_path: The path to start searching from.
         max_depth: The maximum depth to search for the project root (> 0).
+            max_depth = 1 means the function will check the current directory
+            and its parent.
         
     Returns:
         The path to the project root, or None if it could not be found.
     """
     assert max_depth > 0
 
-    current_path = start_path
-    while max_depth > 0:
+    current_path = os.path.abspath(start_path)
+    while max_depth >= 0:
         max_depth -= 1
         if is_root_heuristic(current_path):
             return current_path
-        current_path = os.path.join(current_path, "..")
+        current_path = os.path.dirname(current_path)
     return None
