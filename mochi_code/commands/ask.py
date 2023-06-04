@@ -20,26 +20,20 @@ def setup_ask_arguments(parser: argparse.ArgumentParser,):
 
 
 def run_ask_command(args: argparse.Namespace):
-    """Run the ask command with the provided arguments."""
-    prompt = args.prompt
-    if prompt is None or not prompt.strip():
-        raise ValueError("prompt cannot be empty.")
-
-    ask(prompt)
+    """Run the 'ask' command with the provided arguments."""
+    # Arguments should be validated by the parser.
+    ask(args.prompt)
 
 
 def ask(prompt: str):
     """Run the ask command."""
-    chain = _create_chain()
-    chain.run(prompt)
+    assert prompt and prompt.strip()
 
-
-def _create_chain() -> LLMChain:
     llm = OpenAI(streaming=True,
                  callbacks=[StreamingStdOutCallbackHandler()],
                  temperature=0.9,
                  openai_api_key=keys["OPENAI_API_KEY"])  # type: ignore
-    prompt = PromptTemplate(
+    template = PromptTemplate(
         input_variables=["user_prompt"],
         template="""You are an great software engineer helping other engineers.
         Whenever possible provide code examples, prioritise copying code from 
@@ -51,4 +45,5 @@ def _create_chain() -> LLMChain:
         create a pun with it.
         Please answer this query: '{user_prompt}'""",
     )
-    return LLMChain(llm=llm, prompt=prompt)
+    chain = LLMChain(llm=llm, prompt=template)
+    chain.run(prompt)

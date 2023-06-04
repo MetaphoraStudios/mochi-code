@@ -40,8 +40,7 @@ def _run_command(
     try:
         command(args)
     except Exception as error:  # pylint: disable=broad-except
-        print(f"issue: {error}")
-        command_parser.print_help()
+        print(f"😭 an issue occurred running your command: {error}")
         command_parser.exit(1)
 
 
