@@ -1,8 +1,12 @@
+"""Test the command function in ask.py"""
+
 import argparse
 from unittest import TestCase
 from unittest.mock import patch
-from mochi_code.commands.ask import run_ask_command
+
 from pytest import raises
+
+from mochi_code.commands.ask import run_ask_command
 
 
 class TestRunAskCommand(TestCase):

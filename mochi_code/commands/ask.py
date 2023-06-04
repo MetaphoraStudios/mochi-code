@@ -6,6 +6,8 @@ from dotenv import dotenv_values
 from langchain import LLMChain, OpenAI, PromptTemplate
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
+from mochi_code.commands.argument_types import valid_prompt
+
 # Load keys for the different model backends. This needs to be setup separately.
 keys = dotenv_values(".keys")
 
@@ -13,7 +15,7 @@ keys = dotenv_values(".keys")
 def setup_ask_arguments(parser: argparse.ArgumentParser,):
     """Setup the parser with the ask command arguments."""
     parser.add_argument("prompt",
-                        type=str,
+                        type=valid_prompt,
                         help="Your non-empty prompt to run.")
 
 
