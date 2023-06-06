@@ -40,8 +40,14 @@ def _get_existing_mochi_config(
             it does not exist.
     """
     current_path = path
-    while current_path != current_path.root:
-        mochi_config_path = current_path / ".mochi"
-        if mochi_config_path.exists():
-            return mochi_config_path
+    root_path = pathlib.Path.root
+
+    while current_path != root_path and not _has_mochi_config(current_path):
         current_path = current_path.parent
+
+    return current_path if _has_mochi_config(current_path) else None
+
+
+def _has_mochi_config(path: pathlib.Path) -> bool:
+    """Return True if the path contains a mochi config, False otherwise."""
+    return (path / ".mochi").exists()
