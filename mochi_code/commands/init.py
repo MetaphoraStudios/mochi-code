@@ -3,7 +3,6 @@ project."""
 
 import argparse
 import pathlib
-from typing import Optional
 from mochi_code.code.mochi_config import search_mochi_config
 
 from mochi_code.commands.exceptions import MochiCannotContinue
@@ -25,7 +24,7 @@ def run_init_command(args: argparse.Namespace) -> None:
 
     if (existing_root := search_mochi_config(project_path)) is not None:
         raise MochiCannotContinue(
-            f"🚫 Mochi is already initialized at '{existing_root}'.")
+            f"🚫 Mochi is already initialized at '{existing_root.parent}'.")
 
     init(project_path)
 
