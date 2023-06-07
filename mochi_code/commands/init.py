@@ -4,6 +4,9 @@ project."""
 import argparse
 import pathlib
 from typing import Optional
+from mochi_code.code.mochi_config import search_mochi_config
+
+from mochi_code.commands.exceptions import MochiCannotContinue
 
 
 def setup_init_arguments(parser: argparse.ArgumentParser) -> None:
@@ -18,36 +21,21 @@ def setup_init_arguments(parser: argparse.ArgumentParser) -> None:
 def run_init_command(args: argparse.Namespace) -> None:
     """Run the init command with the provided arguments."""
     # Arguments should be validated by the parser.
-    init()
+    project_path = pathlib.Path.cwd()
+
+    if (existing_root := search_mochi_config(project_path)) is not None:
+        raise MochiCannotContinue(
+            f"🚫 Mochi is already initialized at '{existing_root}'.")
+
+    init(project_path)
 
 
-def init() -> None:
-    """Run the init command."""
-    raise NotImplementedError()
-
-
-def _get_existing_mochi_config(
-        path: pathlib.Path) -> Optional[pathlib.PurePath]:
-    """Get the existing mochi config file if it exists.
-    This will search up the directory tree from the provided path until it finds
-    a mochi config file or reaches the root directory.
-
+def init(project_path: pathlib.Path) -> None:
+    """Run the init command.
+    
     Args:
-        path (pathlib.Path): The path to start searching from.
-
-    Returns:
-        Optional[pathlib.PurePath]: The path to the mochi config file or None if
-            it does not exist.
+        project_path (pathlib.Path): The path to the project to initialize (the
+        '.mochi' folder will be created here).
     """
-    current_path = path
-    root_path = pathlib.Path.root
-
-    while current_path != root_path and not _has_mochi_config(current_path):
-        current_path = current_path.parent
-
-    return current_path if _has_mochi_config(current_path) else None
-
-
-def _has_mochi_config(path: pathlib.Path) -> bool:
-    """Return True if the path contains a mochi config, False otherwise."""
-    return (path / ".mochi").exists()
+    print(f"⚙️ Initializing mochi for project '{project_path}'.")
+    raise NotImplementedError()
