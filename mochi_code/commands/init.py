@@ -3,12 +3,12 @@ project."""
 
 import argparse
 import pathlib
-from mochi_code.code.mochi_config import search_mochi_config
+from mochi_code.code.mochi_config import create_config, search_mochi_config
 
 from mochi_code.commands.exceptions import MochiCannotContinue
 
 
-def setup_init_arguments(parser: argparse.ArgumentParser) -> None:
+def setup_init_arguments(_: argparse.ArgumentParser) -> None:
     """Setup the arguments for the init command.
 
     Args:
@@ -17,7 +17,7 @@ def setup_init_arguments(parser: argparse.ArgumentParser) -> None:
     # Nothing to do here yet.
 
 
-def run_init_command(args: argparse.Namespace) -> None:
+def run_init_command(_: argparse.Namespace) -> None:
     """Run the init command with the provided arguments."""
     # Arguments should be validated by the parser.
     project_path = pathlib.Path.cwd()
@@ -37,4 +37,4 @@ def init(project_path: pathlib.Path) -> None:
         '.mochi' folder will be created here).
     """
     print(f"⚙️ Initializing mochi for project '{project_path}'.")
-    raise NotImplementedError()
+    create_config(project_path)

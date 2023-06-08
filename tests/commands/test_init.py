@@ -32,6 +32,16 @@ class TestRunInitCommand(TestCase):
             with self.assertRaisesRegex(MochiCannotContinue, error_pattern):
                 run_init_command(argparse.Namespace())
 
-    def test_it_calls_init(self) -> None:
+    @patch("mochi_code.code.mochi_config.search_mochi_config")
+    @patch("mochi_code.commands.init.init")
+    def test_it_calls_init(self, search_mock: MagicMock,
+                           mock_init: MagicMock) -> None:
         """Test that the function calls init with the project path."""
-        raise NotImplementedError()
+        search_mock.return_value = None
+        mock_init.return_value = None
+
+        start_path = pathlib.Path("/some/path")
+        with patch.object(pathlib.Path, "cwd", lambda: start_path):
+            run_init_command(argparse.Namespace())
+            assert mock_init.call_count == 1
+            mock_init.assert_called_once_with(start_path)
