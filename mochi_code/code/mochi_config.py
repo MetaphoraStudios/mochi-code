@@ -35,7 +35,6 @@ def search_mochi_config(
     while not is_root(current_path) and not mochi_path.exists():
         current_path = current_path.parent
         mochi_path = current_path / CONFIG_DIR_NAME
-        print("ASFDASFASDF", current_path, mochi_path)
 
     return mochi_path if mochi_path.exists() else None
 

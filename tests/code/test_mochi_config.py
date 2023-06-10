@@ -13,7 +13,6 @@ class TestSearchMochiConfig(TestCase):
     def setUp(self) -> None:
         # Create a temporary folder as root
         self._root_dir = tempfile.TemporaryDirectory()
-        print("ROOT DIR", self._root_dir)
         self._root_path = pathlib.Path(self._root_dir.name)
 
     def tearDown(self) -> None:
@@ -39,7 +38,6 @@ class TestSearchMochiConfig(TestCase):
         mochi_path = self._root_path / ".mochi"
         mochi_path.mkdir()
 
-        print("FFFFFFFFF", self._root_path, mochi_path)
         self.assertEqual(search_mochi_config(self._root_path, self._root_path),
                          mochi_path)
 
