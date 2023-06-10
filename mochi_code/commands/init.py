@@ -8,21 +8,24 @@ from mochi_code.code.mochi_config import create_config, search_mochi_config
 from mochi_code.commands.exceptions import MochiCannotContinue
 
 
-def setup_init_arguments(_: argparse.ArgumentParser) -> None:
+def setup_init_arguments(parser: argparse.ArgumentParser) -> None:
     """Setup the arguments for the init command.
 
     Args:
         parser (argparse.ArgumentParser): The parser to add the arguments to.
     """
-    # Nothing to do here yet.
+    parser.add_argument("-f", "--force",
+                        action="store_true",
+                        help="Force creating the config, overrides existing!")
 
 
-def run_init_command(_: argparse.Namespace) -> None:
+def run_init_command(args: argparse.Namespace) -> None:
     """Run the init command with the provided arguments."""
     # Arguments should be validated by the parser.
     project_path = pathlib.Path.cwd()
 
-    if (existing_root := search_mochi_config(project_path)) is not None:
+    if not args.force and (
+            existing_root := search_mochi_config(project_path)) is not None:
         raise MochiCannotContinue(
             f"🚫 Mochi is already initialized at '{existing_root.parent}'.")
 

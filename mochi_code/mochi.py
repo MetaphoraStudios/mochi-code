@@ -40,9 +40,9 @@ def cli():
 
 
 def _run_command(
-    command: CommandType,
-    args: argparse.Namespace,
-    command_parser: argparse.ArgumentParser,
+        command: CommandType,
+        args: argparse.Namespace,
+        command_parser: argparse.ArgumentParser,
 ):
     """Run the command and exit if an error occurred."""
     try:
