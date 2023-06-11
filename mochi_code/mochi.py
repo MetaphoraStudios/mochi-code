@@ -8,6 +8,7 @@ from typing import Callable
 
 from mochi_code.commands import (run_ask_command, run_init_command,
                                  setup_ask_arguments, setup_init_arguments)
+from mochi_code.greeting import get_greeting
 
 CommandType = Callable[[argparse.Namespace], None]
 
@@ -35,7 +36,8 @@ def cli():
     elif args.subcommand == ask_name:
         _run_command(run_ask_command, args, ask_parser)
     else:
-        print("Here will live the chat mode, but not yet...")
+        print(get_greeting())
+        print("🕰️ Here will live the chat mode, but not yet... try > mochi ask")
         root_parser.print_help()
 
 
