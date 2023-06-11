@@ -8,7 +8,7 @@ from typing import Callable
 
 from mochi_code.commands import (run_ask_command, run_init_command,
                                  setup_ask_arguments, setup_init_arguments)
-from mochi_code.greeting import get_greeting
+from mochi_code.greeting import get_greeting, get_waiting_message
 
 CommandType = Callable[[argparse.Namespace], None]
 
@@ -34,6 +34,7 @@ def cli():
     if args.subcommand == init_name:
         _run_command(run_init_command, args, init_parser)
     elif args.subcommand == ask_name:
+        print(get_waiting_message())
         _run_command(run_ask_command, args, ask_parser)
     else:
         print(get_greeting())

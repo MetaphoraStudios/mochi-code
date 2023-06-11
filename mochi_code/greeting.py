@@ -28,8 +28,31 @@ _HELP_PROMPTS = [
     "What task can I help you with?"
 ]
 
+_WAIT_MESSAGES = [
+    "On it!",
+    "Working on it...",
+    "Give me a moment...",
+    "Just a second...",
+    "Hang tight!",
+    "Processing your request...",
+    "Hold on...",
+    "Almost there...",
+    "Please wait...",
+    "Getting things ready...",
+    "Stand by...",
+    "Let me think...",
+    "Working my magic...",
+    "Stay with me..."
+]
+
 
 def get_greeting() -> str:
+    """Get a greeting."""
     greeting = random.choice(_GREETINGS)
     helpful = random.choice(_HELP_PROMPTS)
     return f"🤖{greeting}\n🤖{helpful}"
+
+
+def get_waiting_message() -> str:
+    """Get a message to display while waiting for responses."""
+    return random.choice(_WAIT_MESSAGES)
