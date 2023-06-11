@@ -1,3 +1,6 @@
+"""List of greetings that can be used by Mochi.
+Generated with the help of bots."""
+
 import random
 
 _GREETINGS = [
