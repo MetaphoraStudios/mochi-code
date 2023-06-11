@@ -24,7 +24,7 @@ def search_mochi_config(
     """
 
     def is_root(path: pathlib.Path) -> bool:
-        return path.parent == path or path == root_path
+        return path in [path.parent, root_path]
 
     current_path = start_path
     if current_path.is_file():

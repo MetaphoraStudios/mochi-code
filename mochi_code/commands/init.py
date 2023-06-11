@@ -3,8 +3,8 @@ project."""
 
 import argparse
 import pathlib
-from mochi_code.code.mochi_config import create_config, search_mochi_config
 
+from mochi_code.code.mochi_config import create_config, search_mochi_config
 from mochi_code.commands.exceptions import MochiCannotContinue
 
 
