@@ -32,6 +32,7 @@ class TestRunInitCommand(TestCase):
         with self.assertRaisesRegex(MochiCannotContinue, error_pattern):
             run_init_command(argparse.Namespace(force=False))
         mock_search.assert_called_once()
+        mock_init.assert_not_called()
 
     @patch("mochi_code.commands.init.search_mochi_config")
     @patch("mochi_code.commands.init.init")
@@ -45,11 +46,27 @@ class TestRunInitCommand(TestCase):
 
         mock_cwd.return_value = start_path
         mock_init.return_value = None
+        mock_search.return_value = start_path.parent / MOCHI_DIR_NAME
+
+        run_init_command(argparse.Namespace(force=True))
+        mock_init.assert_called_once()
+
+    @patch("mochi_code.commands.init.search_mochi_config")
+    @patch("mochi_code.commands.init.init")
+    @patch("mochi_code.commands.init.pathlib.Path.cwd")
+    def test_it_does_not_override_existing(self, mock_cwd: MagicMock,
+                                           mock_init: MagicMock,
+                                           mock_search: MagicMock, ) -> None:
+        """Test that the function does not create a new config if one already
+        exists on the current path."""
+        start_path = pathlib.Path("/some/path")
+
+        mock_cwd.return_value = start_path
+        mock_init.return_value = None
         mock_search.return_value = start_path / MOCHI_DIR_NAME
 
         run_init_command(argparse.Namespace(force=True))
-        mock_search.assert_not_called()
-        mock_init.assert_called_once()
+        mock_init.assert_not_called()
 
     @patch("mochi_code.commands.init.search_mochi_config")
     @patch("mochi_code.commands.init.init")
@@ -83,9 +100,6 @@ class TestInit(TestCase):
 
     def test_it_creates_new_config(self) -> None:
         """Test that the function creates a new config if one didn't exist."""
+        assert not self._mochi_path.exists()
         init(self._root_path)
-
-    def test_it_creates_overrides_config(self) -> None:
-        """Test that the function overrides existing configs, useful when
-        running with --force option."""
-        init(self._root_path)
+        assert self._mochi_path.exists()

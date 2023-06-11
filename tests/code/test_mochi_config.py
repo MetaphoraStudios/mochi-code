@@ -126,15 +126,16 @@ class TestCreateConfig(TestCase):
         with self.assertRaises(ValueError):
             create_config(root_path)
 
-    def test_overrides_existing(self) -> None:
-        """Test that the function overrides existing configs."""
+    def test_does_not_override_existing(self) -> None:
+        """Test that the function does not override existing configs."""
         mochi_path = self._root_path / MOCHI_DIR_NAME
         mochi_path.mkdir()
         test_file_path = mochi_path / "test.txt"
         test_file_path.touch()
 
-        self.assertTrue(test_file_path.exists())
+        assert test_file_path.exists()
 
-        create_config(self._root_path)
+        with self.assertRaises(FileExistsError):
+            create_config(self._root_path)
 
-        self.assertFalse(test_file_path.exists())
+        assert test_file_path.exists()
