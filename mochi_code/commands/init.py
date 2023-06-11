@@ -37,7 +37,7 @@ def init(project_path: pathlib.Path) -> None:
     
     Args:
         project_path (pathlib.Path): The path to the project to initialize (the
-        '.mochi' folder will be created here).
+        config folder will be created here).
     """
     print(f"⚙️ Initializing mochi for project '{project_path}'.")
     create_config(project_path)

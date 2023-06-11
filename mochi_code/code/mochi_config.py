@@ -3,7 +3,7 @@
 import pathlib
 from typing import Optional
 
-CONFIG_DIR_NAME = ".mochi"
+MOCHI_DIR_NAME = ".mochi"
 
 
 def search_mochi_config(
@@ -30,11 +30,11 @@ def search_mochi_config(
     if current_path.is_file():
         raise ValueError("Cannot search for mochi config in a file.")
 
-    mochi_path = current_path / CONFIG_DIR_NAME
+    mochi_path = current_path / MOCHI_DIR_NAME
 
     while not is_root(current_path) and not mochi_path.exists():
         current_path = current_path.parent
-        mochi_path = current_path / CONFIG_DIR_NAME
+        mochi_path = current_path / MOCHI_DIR_NAME
 
     return mochi_path if mochi_path.exists() else None
 
@@ -44,10 +44,10 @@ def create_config(project_path: pathlib.Path) -> None:
 
     Args:
         project_path (pathlib.Path): The path to the project to initialize (the
-        '.mochi' folder will be created here).
+        config folder will be created here).
     """
     if project_path.is_file():
         raise ValueError("Cannot create a mochi config in a file.")
 
-    mochi_root = project_path / CONFIG_DIR_NAME
+    mochi_root = project_path / MOCHI_DIR_NAME
     mochi_root.mkdir()

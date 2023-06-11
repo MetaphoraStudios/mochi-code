@@ -4,7 +4,11 @@ import pathlib
 import tempfile
 from unittest import TestCase
 
-from mochi_code.code.mochi_config import create_config, search_mochi_config
+from mochi_code.code.mochi_config import (
+    create_config,
+    search_mochi_config,
+    MOCHI_DIR_NAME
+)
 
 
 class TestSearchMochiConfig(TestCase):
@@ -35,7 +39,7 @@ class TestSearchMochiConfig(TestCase):
     def test_starting_at_root_found(self) -> None:
         """Test that the function returns root path when starting at the root
         and there is a mochi config."""
-        mochi_path = self._root_path / ".mochi"
+        mochi_path = self._root_path / MOCHI_DIR_NAME
         mochi_path.mkdir()
 
         self.assertEqual(search_mochi_config(self._root_path, self._root_path),
@@ -46,7 +50,7 @@ class TestSearchMochiConfig(TestCase):
         config in the parent."""
         subfolder_path = self._root_path / "subfolder"
         subfolder_path.mkdir()
-        mochi_path = subfolder_path / ".mochi"
+        mochi_path = subfolder_path / MOCHI_DIR_NAME
         mochi_path.mkdir()
         children_path = subfolder_path / "child1/child2"
         children_path.mkdir(parents=True)
@@ -56,10 +60,10 @@ class TestSearchMochiConfig(TestCase):
 
     def test_finds_starting_within_mochi_config(self) -> None:
         """Test that the function returns the parent if it starts from within
-        the .mochi path."""
+        the config path."""
         subfolder_path = self._root_path / "subfolder"
         subfolder_path.mkdir()
-        mochi_path = subfolder_path / ".mochi"
+        mochi_path = subfolder_path / MOCHI_DIR_NAME
         mochi_path.mkdir()
 
         self.assertEqual(search_mochi_config(mochi_path, self._root_path),
@@ -70,7 +74,7 @@ class TestSearchMochiConfig(TestCase):
         config in the current path."""
         subfolder_path = self._root_path / "subfolder"
         subfolder_path.mkdir()
-        mochi_path = subfolder_path / ".mochi"
+        mochi_path = subfolder_path / MOCHI_DIR_NAME
         mochi_path.mkdir()
 
         self.assertEqual(search_mochi_config(subfolder_path, self._root_path),
@@ -105,7 +109,7 @@ class TestCreateConfig(TestCase):
 
     def test_creates_config(self) -> None:
         """Test that the function creates the mochi config folder."""
-        mochi_path = self._root_path / ".mochi"
+        mochi_path = self._root_path / MOCHI_DIR_NAME
 
         self.assertFalse(mochi_path.exists())
 
@@ -124,7 +128,7 @@ class TestCreateConfig(TestCase):
 
     def test_overrides_existing(self) -> None:
         """Test that the function overrides existing configs."""
-        mochi_path = self._root_path / ".mochi"
+        mochi_path = self._root_path / MOCHI_DIR_NAME
         mochi_path.mkdir()
         test_file_path = mochi_path / "test.txt"
         test_file_path.touch()
