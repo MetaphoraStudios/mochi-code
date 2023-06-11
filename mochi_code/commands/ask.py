@@ -12,20 +12,24 @@ from mochi_code.commands.argument_types import valid_prompt
 keys = dotenv_values(".keys")
 
 
-def setup_ask_arguments(parser: argparse.ArgumentParser,):
-    """Setup the parser with the ask command arguments."""
+def setup_ask_arguments(parser: argparse.ArgumentParser) -> None:
+    """Setup the parser with the ask command arguments.
+
+    Args:
+        parser (argparse.ArgumentParser): The parser to add the arguments to.
+    """
     parser.add_argument("prompt",
                         type=valid_prompt,
                         help="Your non-empty prompt to run.")
 
 
-def run_ask_command(args: argparse.Namespace):
+def run_ask_command(args: argparse.Namespace) -> None:
     """Run the 'ask' command with the provided arguments."""
     # Arguments should be validated by the parser.
     ask(args.prompt)
 
 
-def ask(prompt: str):
+def ask(prompt: str) -> None:
     """Run the ask command."""
     assert prompt and prompt.strip()
 

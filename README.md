@@ -1,4 +1,4 @@
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
 # Mochi-Code
 
@@ -26,16 +26,14 @@ The project is in the early stages of development.
 Use pip to install Mochi:
 
 ```bash
-pip install mochi-code
+pip install -g mochi-code
 ```
 
-Setup your OpenAI API key:
+_(not implemented yet)_ Setup your OpenAI API key:
 
 ```bash
 mochi --save-openai-key "<your openai api key>"
 ```
-
-**Note: Not implemented yet**
 
 ## Usage
 
@@ -44,6 +42,17 @@ Here is a simple example of how to use Mochi:
 ```bash
 mochi ask "What changed since last week?"
 ```
+
+And you can get better results for your projects if you first initialize Mochi
+for your project root:
+
+```bash
+# At your project root
+mochi init
+```
+
+👆 let's Mochi know more about your project and improves the prompts when asking
+questions.
 
 **Note: Soon, just running `mochi` will start the interactive chat interface.**
 
@@ -56,7 +65,8 @@ Here's how you can contribute:
 
 ### Reporting Bugs
 
-If you find a bug, open an issue in the [issue tracker](https://github.com/MetaphoraStudios/mochi-code/issues).
+If you find a bug, open an issue in the
+[issue tracker](https://github.com/MetaphoraStudios/mochi-code/issues).
 
 ### Proposing Features
 
@@ -95,4 +105,4 @@ Join the discussion at [Discord](https://discord.gg/kyy5ncWsMa).
 ## Acknowledgements
 
 We'd like to thank anyone who's used or contributed to Mochi!
-ChatGPT for helping to generate this README.
+ChatGPT, Bard and Mochi for helping to generate this README.
