@@ -8,7 +8,7 @@ from dotenv import dotenv_values
 from langchain import LLMChain, OpenAI, PromptTemplate
 from langchain.output_parsers import PydanticOutputParser
 from pydantic import BaseModel, Field
-from retrying import retry
+from retry import retry
 
 from mochi_code.code.mochi_config import create_config, search_mochi_config
 from mochi_code.commands.exceptions import MochiCannotContinue
@@ -82,7 +82,7 @@ def init(project_path: pathlib.Path) -> None:
         project_details_file.write(project_details.json())
 
 
-@retry(stop_max_attempt_number=3)
+@retry(tries=3)
 def _get_project_details(project_files: list[str]) -> ProjectDetails:
     """Get the details of a project from the user.
 

@@ -4,11 +4,8 @@ import pathlib
 import tempfile
 from unittest import TestCase
 
-from mochi_code.code.mochi_config import (
-    create_config,
-    search_mochi_config,
-    MOCHI_DIR_NAME
-)
+from mochi_code.code.mochi_config import (create_config, search_mochi_config,
+                                          MOCHI_DIR_NAME)
 
 
 class TestSearchMochiConfig(TestCase):
@@ -116,7 +113,7 @@ class TestCreateConfig(TestCase):
         config_path = create_config(self._root_path)
 
         self.assertTrue(mochi_path.exists())
-        self.assertEquals(config_path, mochi_path)
+        self.assertEqual(config_path, mochi_path)
 
     def test_raises_if_not_directory(self) -> None:
         """Test that the function raises a ValueError if the path is not a
