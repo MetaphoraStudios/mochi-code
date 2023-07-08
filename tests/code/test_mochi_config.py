@@ -113,9 +113,10 @@ class TestCreateConfig(TestCase):
 
         self.assertFalse(mochi_path.exists())
 
-        create_config(self._root_path)
+        config_path = create_config(self._root_path)
 
         self.assertTrue(mochi_path.exists())
+        self.assertEquals(config_path, mochi_path)
 
     def test_raises_if_not_directory(self) -> None:
         """Test that the function raises a ValueError if the path is not a

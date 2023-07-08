@@ -39,15 +39,20 @@ def search_mochi_config(
     return mochi_path if mochi_path.exists() else None
 
 
-def create_config(project_path: pathlib.Path) -> None:
+def create_config(project_path: pathlib.Path) -> pathlib.PurePath:
     """Create the mochi config file for the project.
 
     Args:
         project_path (pathlib.Path): The path to the project to initialize (the
         config folder will be created here).
+
+    Returns:
+        pathlib.PurePath: The path to the mochi config dir.
     """
     if project_path.is_file():
         raise ValueError("Cannot create a mochi config in a file.")
 
     mochi_root = project_path / MOCHI_DIR_NAME
     mochi_root.mkdir()
+
+    return mochi_root
