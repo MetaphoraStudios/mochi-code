@@ -61,7 +61,8 @@ def init(project_path: pathlib.Path) -> None:
     project_details = _get_project_details(project_files)
 
     print("🤖 Gathering list of dependencies...")
-    dependencies = _get_dependencies_list(project_path)
+    dependencies = _get_dependencies_list(
+        pathlib.Path(project_details.config_file))
     complete_project_details = ProjectDetailsWithDependencies(
         **project_details.dict(), dependencies=dependencies)
 

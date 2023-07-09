@@ -126,6 +126,8 @@ class TestInit(TestCase):
         init(self._root_path)
 
         self.assertTrue(self._mochi_path.exists())
+        mock_dependencies_list.assert_called_once_with(
+            pathlib.Path(mock_project_details.return_value.config_file))
 
         loaded_project_details = load_project_details(self._mochi_path /
                                                       "project_details.json")
@@ -135,3 +137,20 @@ class TestInit(TestCase):
             dependencies=mock_dependencies_list.return_value,
         )
         self.assertEqual(loaded_project_details, expected_project_details)
+
+    @patch("mochi_code.commands.init._get_dependencies_list")
+    @patch("mochi_code.commands.init._get_project_details")
+    def test_does_not_create_config_if_failed(
+            self, mock_project_details: MagicMock,
+            mock_dependencies_list: MagicMock) -> None:
+        """Test that the function does not create a new config if it fails to
+        gather the project details."""
+        mock_project_details.side_effect = ValueError("Some error")
+
+        self.assertFalse(self._mochi_path.exists())
+
+        with self.assertRaises(ValueError):
+            init(self._root_path)
+
+        self.assertFalse(self._mochi_path.exists())
+        mock_dependencies_list.assert_not_called()
