@@ -31,7 +31,7 @@ class TestRunInitCommand(TestCase):
 
         mock_project_details.return_value = ProjectDetails(
             language="python",
-            dependencies="pyproject.toml",
+            config_file="pyproject.toml",
             package_manager="poetry")
         mock_cwd.return_value = start_path
         mock_init.return_value = None
@@ -60,7 +60,7 @@ class TestRunInitCommand(TestCase):
 
         mock_project_details.return_value = ProjectDetails(
             language="python",
-            dependencies="pyproject.toml",
+            config_file="pyproject.toml",
             package_manager="poetry")
         mock_cwd.return_value = start_path
         mock_init.return_value = None
@@ -86,7 +86,7 @@ class TestRunInitCommand(TestCase):
 
         mock_project_details.return_value = ProjectDetails(
             language="python",
-            dependencies="pyproject.toml",
+            config_file="pyproject.toml",
             package_manager="poetry")
         mock_cwd.return_value = start_path
         mock_init.return_value = None
@@ -107,7 +107,7 @@ class TestRunInitCommand(TestCase):
 
         mock_project_details.return_value = ProjectDetails(
             language="python",
-            dependencies="pyproject.toml",
+            config_file="pyproject.toml",
             package_manager="poetry")
         search_mock.return_value = None
         mock_init.return_value = None

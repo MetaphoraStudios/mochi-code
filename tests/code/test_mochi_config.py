@@ -2,7 +2,9 @@
 
 import pathlib
 import tempfile
+import json
 from unittest import TestCase
+from mochi_code.code import ProjectDetails
 
 from mochi_code.code.mochi_config import (create_config, search_mochi_config,
                                           MOCHI_DIR_NAME)
@@ -100,6 +102,9 @@ class TestCreateConfig(TestCase):
         # Create a temporary folder as root
         self._root_dir = tempfile.TemporaryDirectory()
         self._root_path = pathlib.Path(self._root_dir.name)
+        self._project_details = ProjectDetails(language="python",
+                                               config_file="testing.yml",
+                                               package_manager="pip")
 
     def tearDown(self) -> None:
         self._root_dir.cleanup()
@@ -110,7 +115,7 @@ class TestCreateConfig(TestCase):
 
         self.assertFalse(mochi_path.exists())
 
-        config_path = create_config(self._root_path)
+        config_path = create_config(self._root_path, self._project_details)
 
         self.assertTrue(mochi_path.exists())
         self.assertEqual(config_path, mochi_path)
@@ -122,7 +127,7 @@ class TestCreateConfig(TestCase):
         root_path.touch()
 
         with self.assertRaises(ValueError):
-            create_config(root_path)
+            create_config(root_path, self._project_details)
 
     def test_does_not_override_existing(self) -> None:
         """Test that the function does not override existing configs."""
@@ -134,6 +139,24 @@ class TestCreateConfig(TestCase):
         assert test_file_path.exists()
 
         with self.assertRaises(FileExistsError):
-            create_config(self._root_path)
+            create_config(self._root_path, self._project_details)
 
         assert test_file_path.exists()
+
+    def test_writes_project_details(self) -> None:
+        """Test that the function writes the project details to the config
+        file."""
+        mochi_path = self._root_path / MOCHI_DIR_NAME
+
+        self.assertFalse(mochi_path.exists())
+
+        config_path = create_config(self._root_path, self._project_details)
+
+        self.assertTrue(mochi_path.exists())
+        self.assertEqual(config_path, mochi_path)
+
+        with open(config_path / "project_details.json",
+                  encoding="utf-8") as config_file:
+            project_details = json.load(config_file)
+
+        self.assertEqual(project_details, self._project_details)

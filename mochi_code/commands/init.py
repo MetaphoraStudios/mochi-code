@@ -66,7 +66,7 @@ def init(project_path: pathlib.Path) -> None:
 
     config_path = create_config(project_path, complete_project_details)
 
-    config_display_uri = config_path.relative_to(project_path).as_uri()
+    config_display_uri = config_path.relative_to(project_path).as_posix()
     print(f"🤖 Created the config at {config_display_uri}")
 
 
@@ -111,4 +111,7 @@ def _get_dependencies_list(dependencies_config_path: pathlib.Path) -> list[str]:
     Returns:
         list[str]: The list of dependencies or empty if none could be found.
     """
+    if not dependencies_config_path.exists():
+        return []
+
     return []
