@@ -37,6 +37,7 @@ def ask(prompt: str) -> None:
                  callbacks=[StreamingStdOutCallbackHandler()],
                  temperature=0.9,
                  openai_api_key=keys["OPENAI_API_KEY"])  # type: ignore
+
     template = PromptTemplate(
         input_variables=["user_prompt"],
         template="""You are an great software engineer helping other engineers.
@@ -50,4 +51,5 @@ def ask(prompt: str) -> None:
         Please answer this query: '{user_prompt}'""",
     )
     chain = LLMChain(llm=llm, prompt=template)
+
     chain.run(prompt)

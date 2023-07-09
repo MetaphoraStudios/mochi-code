@@ -2,13 +2,13 @@
 
 import pathlib
 import tempfile
+import json
 from unittest import TestCase
+from mochi_code.code import ProjectDetailsWithDependencies
 
-from mochi_code.code.mochi_config import (
-    create_config,
-    search_mochi_config,
-    MOCHI_DIR_NAME
-)
+from mochi_code.code.mochi_config import (create_config, load_project_details,
+                                          search_mochi_config, MOCHI_DIR_NAME,
+                                          save_project_details)
 
 
 class TestSearchMochiConfig(TestCase):
@@ -103,6 +103,11 @@ class TestCreateConfig(TestCase):
         # Create a temporary folder as root
         self._root_dir = tempfile.TemporaryDirectory()
         self._root_path = pathlib.Path(self._root_dir.name)
+        self._project_details = ProjectDetailsWithDependencies(
+            language="python",
+            config_file="testing.yml",
+            package_manager="pip",
+            dependencies=["numpy", "pandas"])
 
     def tearDown(self) -> None:
         self._root_dir.cleanup()
@@ -113,9 +118,10 @@ class TestCreateConfig(TestCase):
 
         self.assertFalse(mochi_path.exists())
 
-        create_config(self._root_path)
+        config_path = create_config(self._root_path, self._project_details)
 
         self.assertTrue(mochi_path.exists())
+        self.assertEqual(config_path, mochi_path)
 
     def test_raises_if_not_directory(self) -> None:
         """Test that the function raises a ValueError if the path is not a
@@ -124,7 +130,7 @@ class TestCreateConfig(TestCase):
         root_path.touch()
 
         with self.assertRaises(ValueError):
-            create_config(root_path)
+            create_config(root_path, self._project_details)
 
     def test_does_not_override_existing(self) -> None:
         """Test that the function does not override existing configs."""
@@ -136,6 +142,86 @@ class TestCreateConfig(TestCase):
         assert test_file_path.exists()
 
         with self.assertRaises(FileExistsError):
-            create_config(self._root_path)
+            create_config(self._root_path, self._project_details)
 
         assert test_file_path.exists()
+
+    def test_writes_project_details(self) -> None:
+        """Test that the function writes the project details to the config
+        file."""
+        mochi_path = self._root_path / MOCHI_DIR_NAME
+
+        self.assertFalse(mochi_path.exists())
+
+        config_path = create_config(self._root_path, self._project_details)
+
+        self.assertTrue(mochi_path.exists())
+        self.assertEqual(config_path, mochi_path)
+
+        with open(config_path / "project_details.json",
+                  encoding="utf-8") as config_file:
+            project_details = json.load(config_file)
+
+        self.assertEqual(project_details, self._project_details)
+
+
+class TestSaveAndLoadProjectDetails(TestCase):
+    """Test the save_project_details and load_project_details functions."""
+
+    def setUp(self) -> None:
+        # Create a temporary folder as root
+        self._root_dir = tempfile.TemporaryDirectory()
+        self._root_path = pathlib.Path(self._root_dir.name)
+        self._project_details = ProjectDetailsWithDependencies(
+            language="typescript",
+            config_file="testing.json",
+            package_manager="npm",
+            dependencies=["react", "redux"])
+
+    def tearDown(self) -> None:
+        self._root_dir.cleanup()
+
+    def test_loads_project_details(self) -> None:
+        """Test that the function loads the project details from the config
+        file."""
+        mochi_path = self._root_path / MOCHI_DIR_NAME
+        mochi_path.mkdir()
+        project_details_path = mochi_path / "project_details.json"
+
+        save_project_details(project_details_path, self._project_details)
+        loaded_project_details = load_project_details(project_details_path)
+
+        self.assertEqual(loaded_project_details, self._project_details)
+
+        # Test that it actually updates the values
+        new_project_details = ProjectDetailsWithDependencies(
+            language="python",
+            config_file="testing.yml",
+            package_manager="pip",
+            dependencies=["numpy", "pandas"])
+
+        save_project_details(project_details_path, new_project_details)
+        loaded_project_details = load_project_details(project_details_path)
+
+        self.assertEqual(loaded_project_details, new_project_details)
+
+    def test_raises_config_is_dir_when_saving(self) -> None:
+        """Test that the function raises if the path is a folder."""
+        with self.assertRaises(IsADirectoryError):
+            save_project_details(self._root_path, self._project_details)
+
+    def test_raises_if_no_config_folder_when_saving(self) -> None:
+        """Test that the function raises if there is no config folder to save 
+        to."""
+        project_details_path = self._root_path / "invalid/project_details.json"
+        with self.assertRaises(FileNotFoundError):
+            save_project_details(project_details_path, self._project_details)
+
+    def test_raises_if_no_config_when_loading(self) -> None:
+        """Test that the function raises if there is no config file to load."""
+        with self.assertRaises(IsADirectoryError):
+            load_project_details(self._root_path)
+
+        with self.assertRaises(FileNotFoundError):
+            load_project_details(self._root_path /
+                                 "invalid/project_details.json")

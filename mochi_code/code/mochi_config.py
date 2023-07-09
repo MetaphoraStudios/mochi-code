@@ -1,7 +1,10 @@
 """Module for handling mochi config files."""
 
 import pathlib
+import json
 from typing import Optional
+
+from mochi_code.code import ProjectDetailsWithDependencies
 
 MOCHI_DIR_NAME = ".mochi"
 
@@ -39,15 +42,60 @@ def search_mochi_config(
     return mochi_path if mochi_path.exists() else None
 
 
-def create_config(project_path: pathlib.Path) -> None:
+def create_config(
+        project_path: pathlib.Path,
+        project_details: ProjectDetailsWithDependencies) -> pathlib.PurePath:
     """Create the mochi config file for the project.
 
     Args:
         project_path (pathlib.Path): The path to the project to initialize (the
         config folder will be created here).
+        project_details (ProjectDetailsWithDependencies): The details of the 
+        project to save in the config.
+
+    Returns:
+        pathlib.PurePath: The path to the mochi config dir.
     """
     if project_path.is_file():
         raise ValueError("Cannot create a mochi config in a file.")
 
     mochi_root = project_path / MOCHI_DIR_NAME
-    mochi_root.mkdir()
+    mochi_root.mkdir(parents=True)
+
+    project_details_path = mochi_root / "project_details.json"
+    save_project_details(project_details_path, project_details)
+
+    return mochi_root
+
+
+def save_project_details(
+        project_details_path: pathlib.Path,
+        project_details: ProjectDetailsWithDependencies) -> None:
+    """Save the project details to the mochi config file. This will overwrite!
+
+    Args:
+        project_details_path (pathlib.Path): The path to the project details 
+        json file.
+        project_details (ProjectDetailsWithDependencies): The details of the 
+        project to save in the config.
+    """
+    with open(project_details_path, "w",
+              encoding="utf-8") as project_details_file:
+        project_details_file.write(project_details.json())
+
+
+def load_project_details(
+        project_details_path: pathlib.Path) -> ProjectDetailsWithDependencies:
+    """Load the project details from the mochi config file.
+
+    Args:
+        project_details_path (pathlib.Path): The path to the project details 
+        file.
+
+    Returns:
+        ProjectDetailsWithDependencies: The project details loaded from the 
+        config.
+    """
+    with open(project_details_path, "r",
+              encoding="utf-8") as project_details_file:
+        return ProjectDetailsWithDependencies(**json.load(project_details_file))

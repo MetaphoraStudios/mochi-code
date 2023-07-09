@@ -296,6 +296,17 @@ typing-inspect = ">=0.4.0"
 dev = ["flake8", "hypothesis", "ipython", "mypy (>=0.710)", "portray", "pytest (>=6.2.3)", "simplejson", "types-dataclasses"]
 
 [[package]]
+name = "decorator"
+version = "5.1.1"
+description = "Decorators for Humans"
+optional = false
+python-versions = ">=3.5"
+files = [
+    {file = "decorator-5.1.1-py3-none-any.whl", hash = "sha256:b8c3f85900b9dc423225913c5aace94729fe1fa9763b38939a95226f02d37186"},
+    {file = "decorator-5.1.1.tar.gz", hash = "sha256:637996211036b6385ef91435e4fae22989472f9d571faba8927ba8253acbc330"},
+]
+
+[[package]]
 name = "dill"
 version = "0.3.6"
 description = "serialize all of python"
@@ -1127,6 +1138,19 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
+name = "retry2"
+version = "0.9.5"
+description = "Easy to use retry decorator."
+optional = false
+python-versions = ">=2.6"
+files = [
+    {file = "retry2-0.9.5-py2.py3-none-any.whl", hash = "sha256:f7fee13b1e15d0611c462910a6aa72a8919823988dd0412152bc3719c89a4e55"},
+]
+
+[package.dependencies]
+decorator = ">=3.4.2"
+
+[[package]]
 name = "sqlalchemy"
 version = "2.0.15"
 description = "Database Abstraction Library"
@@ -1258,6 +1282,17 @@ dev = ["py-make (>=0.1.0)", "twine", "wheel"]
 notebook = ["ipywidgets (>=6)"]
 slack = ["slack-sdk"]
 telegram = ["requests"]
+
+[[package]]
+name = "types-retry"
+version = "0.9.9.3"
+description = "Typing stubs for retry"
+optional = false
+python-versions = "*"
+files = [
+    {file = "types-retry-0.9.9.3.tar.gz", hash = "sha256:1b7a0a04adf12f21237e76833574a9a8f755f88889c226ad99d6e3bfa5b6e3c8"},
+    {file = "types_retry-0.9.9.3-py3-none-any.whl", hash = "sha256:238fdb08794862d951187250e443257bb09e927404c88edf7ce88618f4357c2a"},
+]
 
 [[package]]
 name = "typing-extensions"
@@ -1490,4 +1525,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "0fdaf27835622365028937ef6ecee905a9beb3074e214fec087aef9057dd3541"
+content-hash = "6fad2f1bacf5f813c124af004028a3601e7491ac031caa96f8e3bf4da539bf41"

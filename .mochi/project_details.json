@@ -1,0 +1,1 @@
+{"language": "python", "config_file": "pyproject.toml", "package_manager": "poetry", "dependencies": ["python", "langchain", "python-dotenv", "openai", "pydantic", "retry2", "pytest", "pylint", "mypy", "yapf", "types-retry"]}
