@@ -7,27 +7,14 @@ import pathlib
 from dotenv import dotenv_values
 from langchain import LLMChain, OpenAI, PromptTemplate
 from langchain.output_parsers import PydanticOutputParser
-from pydantic import BaseModel, Field
 from retry import retry
 
+from mochi_code.code import ProjectDetails
 from mochi_code.code.mochi_config import create_config, search_mochi_config
 from mochi_code.commands.exceptions import MochiCannotContinue
 
 # Load keys for the different model backends. This needs to be setup separately.
 keys = dotenv_values(".keys")
-
-
-class ProjectDetails(BaseModel):
-    """The details of a project."""
-    language: str = Field(
-        description=
-        "name of the programming language of a project with these files")
-    dependencies: str = Field(
-        description=
-        "single config file defining the list of dependencies of the " +
-        "project, excluding lock file!")
-    package_manager: str = Field(
-        description="package manager name or 'unknown'")
 
 
 def setup_init_arguments(parser: argparse.ArgumentParser) -> None:
