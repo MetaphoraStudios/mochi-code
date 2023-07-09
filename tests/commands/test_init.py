@@ -6,9 +6,11 @@ import tempfile
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-from mochi_code.code.mochi_config import MOCHI_DIR_NAME
+from mochi_code.code.mochi_config import MOCHI_DIR_NAME, load_project_details
 from mochi_code.commands.exceptions import MochiCannotContinue
-from mochi_code.commands.init import run_init_command, init, ProjectDetails
+from mochi_code.commands.init import (ProjectDetails,
+                                      ProjectDetailsWithDependencies, init,
+                                      run_init_command)
 
 
 class TestRunInitCommand(TestCase):
@@ -17,10 +19,8 @@ class TestRunInitCommand(TestCase):
     @patch("mochi_code.commands.init.search_mochi_config")
     @patch("mochi_code.commands.init.init")
     @patch("mochi_code.commands.init.pathlib.Path.cwd")
-    @patch("mochi_code.commands.init._get_project_details")
     def test_it_raises_if_already_initialized(
         self,
-        mock_project_details: MagicMock,
         mock_cwd: MagicMock,
         mock_init: MagicMock,
         mock_search: MagicMock,
@@ -29,10 +29,6 @@ class TestRunInitCommand(TestCase):
         """
         start_path = pathlib.Path("/some/path")
 
-        mock_project_details.return_value = ProjectDetails(
-            language="python",
-            config_file="pyproject.toml",
-            package_manager="poetry")
         mock_cwd.return_value = start_path
         mock_init.return_value = None
         mock_search.return_value = start_path / MOCHI_DIR_NAME
@@ -46,10 +42,8 @@ class TestRunInitCommand(TestCase):
     @patch("mochi_code.commands.init.search_mochi_config")
     @patch("mochi_code.commands.init.init")
     @patch("mochi_code.commands.init.pathlib.Path.cwd")
-    @patch("mochi_code.commands.init._get_project_details")
     def test_it_forces_config_creation(
         self,
-        mock_project_details: MagicMock,
         mock_cwd: MagicMock,
         mock_init: MagicMock,
         mock_search: MagicMock,
@@ -58,10 +52,6 @@ class TestRunInitCommand(TestCase):
         """
         start_path = pathlib.Path("/some/path")
 
-        mock_project_details.return_value = ProjectDetails(
-            language="python",
-            config_file="pyproject.toml",
-            package_manager="poetry")
         mock_cwd.return_value = start_path
         mock_init.return_value = None
         mock_search.return_value = start_path.parent / MOCHI_DIR_NAME
@@ -72,10 +62,8 @@ class TestRunInitCommand(TestCase):
     @patch("mochi_code.commands.init.search_mochi_config")
     @patch("mochi_code.commands.init.init")
     @patch("mochi_code.commands.init.pathlib.Path.cwd")
-    @patch("mochi_code.commands.init._get_project_details")
     def test_it_does_not_override_existing(
         self,
-        mock_project_details: MagicMock,
         mock_cwd: MagicMock,
         mock_init: MagicMock,
         mock_search: MagicMock,
@@ -84,10 +72,6 @@ class TestRunInitCommand(TestCase):
         exists on the current path."""
         start_path = pathlib.Path("/some/path")
 
-        mock_project_details.return_value = ProjectDetails(
-            language="python",
-            config_file="pyproject.toml",
-            package_manager="poetry")
         mock_cwd.return_value = start_path
         mock_init.return_value = None
         mock_search.return_value = start_path / MOCHI_DIR_NAME
@@ -98,17 +82,11 @@ class TestRunInitCommand(TestCase):
     @patch("mochi_code.commands.init.search_mochi_config")
     @patch("mochi_code.commands.init.init")
     @patch("mochi_code.commands.init.pathlib.Path.cwd")
-    @patch("mochi_code.commands.init._get_project_details")
-    def test_it_calls_init(self, mock_project_details: MagicMock,
-                           mock_cwd: MagicMock, mock_init: MagicMock,
+    def test_it_calls_init(self, mock_cwd: MagicMock, mock_init: MagicMock,
                            search_mock: MagicMock) -> None:
         """Test that the function calls init with the project path."""
         start_path = pathlib.Path(tempfile.TemporaryDirectory().name)
 
-        mock_project_details.return_value = ProjectDetails(
-            language="python",
-            config_file="pyproject.toml",
-            package_manager="poetry")
         search_mock.return_value = None
         mock_init.return_value = None
         mock_cwd.return_value = start_path
@@ -131,8 +109,29 @@ class TestInit(TestCase):
     def tearDown(self) -> None:
         self._root_dir.cleanup()
 
-    def test_it_creates_new_config(self) -> None:
+    @patch("mochi_code.commands.init._get_dependencies_list")
+    @patch("mochi_code.commands.init._get_project_details")
+    def test_it_creates_new_config(self, mock_project_details: MagicMock,
+                                   mock_dependencies_list: MagicMock) -> None:
         """Test that the function creates a new config if one didn't exist."""
-        assert not self._mochi_path.exists()
+        mock_project_details.return_value = ProjectDetails(
+            language="python",
+            config_file="pyproject.toml",
+            package_manager="poetry",
+        )
+        mock_dependencies_list.return_value = ["mypy", "black"]
+
+        self.assertFalse(self._mochi_path.exists())
+
         init(self._root_path)
-        assert self._mochi_path.exists()
+
+        self.assertTrue(self._mochi_path.exists())
+
+        loaded_project_details = load_project_details(self._mochi_path /
+                                                      "project_details.json")
+
+        expected_project_details = ProjectDetailsWithDependencies(
+            **mock_project_details.return_value.dict(),
+            dependencies=mock_dependencies_list.return_value,
+        )
+        self.assertEqual(loaded_project_details, expected_project_details)

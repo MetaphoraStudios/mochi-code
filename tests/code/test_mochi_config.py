@@ -4,7 +4,7 @@ import pathlib
 import tempfile
 import json
 from unittest import TestCase
-from mochi_code.code import ProjectDetails
+from mochi_code.code import ProjectDetailsWithDependencies
 
 from mochi_code.code.mochi_config import (create_config, load_project_details,
                                           search_mochi_config, MOCHI_DIR_NAME,
@@ -103,9 +103,11 @@ class TestCreateConfig(TestCase):
         # Create a temporary folder as root
         self._root_dir = tempfile.TemporaryDirectory()
         self._root_path = pathlib.Path(self._root_dir.name)
-        self._project_details = ProjectDetails(language="python",
-                                               config_file="testing.yml",
-                                               package_manager="pip")
+        self._project_details = ProjectDetailsWithDependencies(
+            language="python",
+            config_file="testing.yml",
+            package_manager="pip",
+            dependencies=["numpy", "pandas"])
 
     def tearDown(self) -> None:
         self._root_dir.cleanup()
@@ -170,9 +172,11 @@ class TestSaveAndLoadProjectDetails(TestCase):
         # Create a temporary folder as root
         self._root_dir = tempfile.TemporaryDirectory()
         self._root_path = pathlib.Path(self._root_dir.name)
-        self._project_details = ProjectDetails(language="typescript",
-                                               config_file="testing.json",
-                                               package_manager="npm")
+        self._project_details = ProjectDetailsWithDependencies(
+            language="typescript",
+            config_file="testing.json",
+            package_manager="npm",
+            dependencies=["react", "redux"])
 
     def tearDown(self) -> None:
         self._root_dir.cleanup()
@@ -190,9 +194,11 @@ class TestSaveAndLoadProjectDetails(TestCase):
         self.assertEqual(loaded_project_details, self._project_details)
 
         # Test that it actually updates the values
-        new_project_details = ProjectDetails(language="python",
-                                             config_file="testing.yml",
-                                             package_manager="pip")
+        new_project_details = ProjectDetailsWithDependencies(
+            language="python",
+            config_file="testing.yml",
+            package_manager="pip",
+            dependencies=["numpy", "pandas"])
 
         save_project_details(project_details_path, new_project_details)
         loaded_project_details = load_project_details(project_details_path)
