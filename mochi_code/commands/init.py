@@ -9,7 +9,7 @@ from langchain import LLMChain, OpenAI, PromptTemplate
 from langchain.output_parsers import PydanticOutputParser
 from retry import retry
 
-from mochi_code.code import ProjectDetails
+from mochi_code.code import ProjectDetails, ProjectDetailsWithDependencies
 from mochi_code.code.mochi_config import create_config, search_mochi_config
 from mochi_code.commands.exceptions import MochiCannotContinue
 
@@ -54,19 +54,20 @@ def init(project_path: pathlib.Path) -> None:
         config folder will be created here).
     """
     print(f"⚙️ Initializing mochi for project '{project_path}'.")
-    config_path = create_config(project_path)
-
     print("🤖 Gathering information about your project...")
 
     project_files = [p.name for p in project_path.glob("*")]
     project_details = _get_project_details(project_files)
 
-    # write a json file named 'project_details.json' in the config folder with
-    # the project_details.json() content
-    project_details_path = config_path / "project_details.json"
-    with open(project_details_path, "w",
-              encoding="utf-8") as project_details_file:
-        project_details_file.write(project_details.json())
+    print("🤖 Gathering list of dependencies...")
+    dependencies = _get_dependencies_list(project_path)
+    complete_project_details = ProjectDetailsWithDependencies(
+        **project_details.dict(), dependencies=dependencies)
+
+    config_path = create_config(project_path, complete_project_details)
+
+    config_display_uri = config_path.relative_to(project_path).as_uri()
+    print(f"🤖 Created the config at {config_display_uri}")
 
 
 @retry(tries=3)
@@ -97,3 +98,17 @@ def _get_project_details(project_files: list[str]) -> ProjectDetails:
     response = chain.run(files=",".join(project_files), verbose=True)
 
     return parser.parse(response)
+
+
+def _get_dependencies_list(dependencies_config_path: pathlib.Path) -> list[str]:
+    """Get the list of dependencies from the dependencies file.
+
+    Args:
+        dependencies_config_path (pathlib.Path): The path to the config file
+        defining the dependencies. This may not actually exist, the code will
+        validate first.
+    
+    Returns:
+        list[str]: The list of dependencies or empty if none could be found.
+    """
+    return []

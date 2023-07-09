@@ -9,9 +9,14 @@ class ProjectDetails(BaseModel):
     language: str = Field(
         description=
         "name of the programming language of a project with these files")
-    dependencies: str = Field(
+    config_file: str = Field(
         description=
         "single config file defining the list of dependencies of the " +
         "project, excluding lock file!")
     package_manager: str = Field(
         description="package manager name or 'unknown'")
+
+
+class ProjectDetailsWithDependencies(ProjectDetails):
+    """The complete details of a project."""
+    dependencies: list[str] = Field("list of dependencies of the project")

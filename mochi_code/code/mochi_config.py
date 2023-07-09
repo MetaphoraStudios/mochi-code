@@ -3,6 +3,8 @@
 import pathlib
 from typing import Optional
 
+from mochi_code.code import ProjectDetails
+
 MOCHI_DIR_NAME = ".mochi"
 
 
@@ -39,12 +41,15 @@ def search_mochi_config(
     return mochi_path if mochi_path.exists() else None
 
 
-def create_config(project_path: pathlib.Path) -> pathlib.PurePath:
+def create_config(project_path: pathlib.Path,
+                  project_details: ProjectDetails) -> pathlib.PurePath:
     """Create the mochi config file for the project.
 
     Args:
         project_path (pathlib.Path): The path to the project to initialize (the
         config folder will be created here).
+        project_details (ProjectDetails): The details of the project to save in
+        the config.
 
     Returns:
         pathlib.PurePath: The path to the mochi config dir.
@@ -53,6 +58,11 @@ def create_config(project_path: pathlib.Path) -> pathlib.PurePath:
         raise ValueError("Cannot create a mochi config in a file.")
 
     mochi_root = project_path / MOCHI_DIR_NAME
-    mochi_root.mkdir()
+    mochi_root.mkdir(parents=True)
+
+    project_details_path = mochi_root / "project_details.json"
+    with open(project_details_path, "w",
+              encoding="utf-8") as project_details_file:
+        project_details_file.write(project_details.json())
 
     return mochi_root
