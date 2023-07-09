@@ -54,15 +54,14 @@ def init(project_path: pathlib.Path) -> None:
         project_path (pathlib.Path): The path to the project to initialize (the
         config folder will be created here).
     """
-    print(f"⚙️ Initializing mochi for project '{project_path}'.")
+    print(f"⚙️  Initializing mochi for project '{project_path}'.")
     print("🤖 Gathering information about your project...")
 
     project_files = [p.name for p in project_path.glob("*")]
     project_details = _get_project_details(project_files)
 
     print("🤖 Gathering list of dependencies...")
-    dependencies = _get_dependencies_list(
-        pathlib.Path(project_details.config_file))
+    dependencies = _get_dependencies_list(project_details)
     complete_project_details = ProjectDetailsWithDependencies(
         **project_details.dict(), dependencies=dependencies)
 
@@ -102,23 +101,29 @@ def _get_project_details(project_files: list[str]) -> ProjectDetails:
     return parser.parse(response)
 
 
-def _get_dependencies_list(dependencies_config_path: pathlib.Path) -> list[str]:
+def _get_dependencies_list(project_details: ProjectDetails) -> list[str]:
     """Get the list of dependencies from the dependencies file.
 
     Args:
-        dependencies_config_path (pathlib.Path): The path to the config file
-        defining the dependencies. This may not actually exist, the code will
-        validate first.
+        project_details (ProjectDetails): The details of the project we're
+        extracting the dependencies from.
     
     Returns:
         list[str]: The list of dependencies or empty if none could be found.
     """
+    if not project_details.config_file:
+        # Avoids the case where it is treated as the "." file.
+        return []
+
+    dependencies_config_path = pathlib.Path(project_details.config_file)
     if not dependencies_config_path.exists():
         return []
 
     dependencies_config_content = _load_dependencies_config_content(
         dependencies_config_path)
-    return _fetch_list_of_dependencies(dependencies_config_content)
+    return _fetch_list_of_dependencies(project_details.language,
+                                       project_details.package_manager,
+                                       dependencies_config_content)
 
 
 def _load_dependencies_config_content(
@@ -137,7 +142,8 @@ def _load_dependencies_config_content(
 
 
 @retry(tries=3)
-def _fetch_list_of_dependencies(dependencies_config_content: str) -> list[str]:
+def _fetch_list_of_dependencies(language: str, package_manager: str,
+                                dependencies_config_content: str) -> list[str]:
     """Fetch the list of dependencies from the modal.
 
     Returns:
@@ -160,6 +166,8 @@ def _fetch_list_of_dependencies(dependencies_config_content: str) -> list[str]:
     )
     chain = LLMChain(llm=llm, prompt=template)
 
-    response = chain.run(config_content=dependencies_config_content)
+    response = chain.run(language=language,
+                         package_manager=package_manager,
+                         config_content=dependencies_config_content)
 
     return parser.parse(response)

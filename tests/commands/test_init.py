@@ -10,7 +10,7 @@ from mochi_code.code.mochi_config import MOCHI_DIR_NAME, load_project_details
 from mochi_code.commands.exceptions import MochiCannotContinue
 from mochi_code.commands.init import (ProjectDetails,
                                       ProjectDetailsWithDependencies, init,
-                                      run_init_command)
+                                      run_init_command, _get_dependencies_list)
 
 
 class TestRunInitCommand(TestCase):
@@ -127,7 +127,7 @@ class TestInit(TestCase):
 
         self.assertTrue(self._mochi_path.exists())
         mock_dependencies_list.assert_called_once_with(
-            pathlib.Path(mock_project_details.return_value.config_file))
+            mock_project_details.return_value)
 
         loaded_project_details = load_project_details(self._mochi_path /
                                                       "project_details.json")
@@ -154,3 +154,75 @@ class TestInit(TestCase):
 
         self.assertFalse(self._mochi_path.exists())
         mock_dependencies_list.assert_not_called()
+
+
+class TestGetDependenciesList(TestCase):
+    """Test the _get_dependencies_list function."""
+
+    def setUp(self) -> None:
+        # Create a temporary folder as root
+        self._root_dir = tempfile.TemporaryDirectory()
+        self._root_path = pathlib.Path(self._root_dir.name)
+        self._mochi_path = self._root_path / MOCHI_DIR_NAME
+
+    def tearDown(self) -> None:
+        self._root_dir.cleanup()
+
+    @patch("mochi_code.commands.init._fetch_list_of_dependencies")
+    @patch("mochi_code.commands.init._load_dependencies_config_content")
+    def test_it_loads_config(self, mock_load_content: MagicMock,
+                             mock_fetch_dependencies: MagicMock) -> None:
+        """Test the function loads the content of the config."""
+        mock_load_content.return_value = "this is a test config file"
+        mock_fetch_dependencies.return_value = ["mypy", "black"]
+
+        project_details = ProjectDetails(
+            language="python",
+            config_file="pyproject.toml",
+            package_manager="poetry",
+        )
+        config_path = pathlib.Path(project_details.config_file)
+        (self._root_path / config_path).touch()
+
+        dependencies = _get_dependencies_list(project_details)
+
+        self.assertEqual(dependencies, mock_fetch_dependencies.return_value)
+        mock_load_content.assert_called_once_with(config_path)
+
+    @patch("mochi_code.commands.init._fetch_list_of_dependencies")
+    @patch("mochi_code.commands.init._load_dependencies_config_content")
+    def test_it_returns_empty_if_config_does_not_exist(
+            self, mock_load_content: MagicMock,
+            mock_fetch_dependencies: MagicMock) -> None:
+        """Test the function returns an empty list if the config doesn't exist.
+        """
+        project_details = ProjectDetails(
+            language="python",
+            config_file="testing.toml",
+            package_manager="poetry",
+        )
+
+        dependencies = _get_dependencies_list(project_details)
+
+        self.assertEqual(dependencies, [])
+        mock_load_content.assert_not_called()
+        mock_fetch_dependencies.assert_not_called()
+
+    @patch("mochi_code.commands.init._fetch_list_of_dependencies")
+    @patch("mochi_code.commands.init._load_dependencies_config_content")
+    def test_it_returns_empty_if_config_undefined(
+            self, mock_load_content: MagicMock,
+            mock_fetch_dependencies: MagicMock) -> None:
+        """Test the function returns an empty list if the config doesn't exist.
+        """
+        project_details = ProjectDetails(
+            language="python",
+            config_file="",
+            package_manager="poetry",
+        )
+
+        dependencies = _get_dependencies_list(project_details)
+
+        self.assertEqual(dependencies, [])
+        mock_load_content.assert_not_called()
+        mock_fetch_dependencies.assert_not_called()
