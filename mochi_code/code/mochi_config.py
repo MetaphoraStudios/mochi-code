@@ -1,6 +1,7 @@
 """Module for handling mochi config files."""
 
 import pathlib
+import json
 from typing import Optional
 
 from mochi_code.code import ProjectDetails
@@ -61,8 +62,36 @@ def create_config(project_path: pathlib.Path,
     mochi_root.mkdir(parents=True)
 
     project_details_path = mochi_root / "project_details.json"
+    save_project_details(project_details_path, project_details)
+
+    return mochi_root
+
+
+def save_project_details(project_details_path: pathlib.Path,
+                         project_details: ProjectDetails) -> None:
+    """Save the project details to the mochi config file. This will overwrite!
+
+    Args:
+        project_details_path (pathlib.Path): The path to the project details 
+        json file.
+        project_details (ProjectDetails): The details of the project to save in
+        the config.
+    """
     with open(project_details_path, "w",
               encoding="utf-8") as project_details_file:
         project_details_file.write(project_details.json())
 
-    return mochi_root
+
+def load_project_details(project_details_path: pathlib.Path) -> ProjectDetails:
+    """Load the project details from the mochi config file.
+
+    Args:
+        project_details_path (pathlib.Path): The path to the project details 
+        file.
+
+    Returns:
+        ProjectDetails: The project details loaded from the config.
+    """
+    with open(project_details_path, "r",
+              encoding="utf-8") as project_details_file:
+        return ProjectDetails(**json.load(project_details_file))
