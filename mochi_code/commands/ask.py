@@ -1,12 +1,14 @@
 """The ask command. This command is used to ask mochi a single question."""
 
 import argparse
+import pathlib
 
 from dotenv import dotenv_values
 from langchain import LLMChain, OpenAI, PromptTemplate
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
 from mochi_code.commands.argument_types import valid_prompt
+from mochi_code.prompts.project_prompts import get_project_prompt_if_available
 
 # Load keys for the different model backends. This needs to be setup separately.
 keys = dotenv_values(".keys")
@@ -39,7 +41,7 @@ def ask(prompt: str) -> None:
                  openai_api_key=keys["OPENAI_API_KEY"])  # type: ignore
 
     template = PromptTemplate(
-        input_variables=["user_prompt"],
+        input_variables=["project_prompt", "user_prompt"],
         template="""You are an great software engineer helping other engineers.
         Whenever possible provide code examples, prioritise copying code from 
         the following prompt (if available). If you're creating a function or 
@@ -48,8 +50,12 @@ def ask(prompt: str) -> None:
         query is not related to code, please ask to clarify, provide more 
         context or rephrase the query, but keep it very polite and friendly, or 
         create a pun with it.
-        Please answer this query: '{user_prompt}'""",
+        Keep answers concise and if you don't know the answer, please say so.
+        {project_prompt}
+        Please answer this user query: '{user_prompt}'""",
     )
     chain = LLMChain(llm=llm, prompt=template)
 
-    chain.run(prompt)
+    current_path = pathlib.Path.cwd()
+    project_prompt = get_project_prompt_if_available(current_path)
+    chain.run(user_prompt=prompt, project_prompt=project_prompt)
