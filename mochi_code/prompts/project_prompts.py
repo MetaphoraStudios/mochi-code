@@ -17,7 +17,7 @@ _ProjectTemplate = PromptTemplate(
 )
 
 
-def get_project_prompt_if_available(start_path: pathlib.Path) -> Optional[str]:
+def get_project_prompt(start_path: pathlib.Path) -> Optional[str]:
     """Get the project prompt if available.
 
     Args:
@@ -25,7 +25,8 @@ def get_project_prompt_if_available(start_path: pathlib.Path) -> Optional[str]:
         (uses search_mochi_config to find the project details).
 
     Returns:
-        str: The project prompt or None if none could be found.
+        str: The project prompt or None if there are no project details
+        available.
     """
     existing_root = search_mochi_config(start_path)
     if not existing_root:

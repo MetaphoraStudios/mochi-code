@@ -8,7 +8,7 @@ from langchain import LLMChain, OpenAI, PromptTemplate
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
 from mochi_code.commands.argument_types import valid_prompt
-from mochi_code.prompts.project_prompts import get_project_prompt_if_available
+from mochi_code.prompts.project_prompts import get_project_prompt
 
 # Load keys for the different model backends. This needs to be setup separately.
 keys = dotenv_values(".keys")
@@ -51,12 +51,13 @@ def ask(prompt: str) -> None:
         context or rephrase the query, but keep it very polite and friendly, or 
         create a pun with it.
         Keep answers concise and if you don't know the answer, please say so.
-        Address the user directly, as an interactive assistant.
+        Address the user directly, as an interactive assistant, but no need to
+        greet, go straight to the point, politely.
         {project_prompt}
         Please answer this user query: '{user_prompt}'""",
     )
     chain = LLMChain(llm=llm, prompt=template)
 
     current_path = pathlib.Path.cwd()
-    project_prompt = get_project_prompt_if_available(current_path)
+    project_prompt = get_project_prompt(current_path)
     chain.run(user_prompt=prompt, project_prompt=project_prompt)
