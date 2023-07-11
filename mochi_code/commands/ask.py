@@ -51,6 +51,7 @@ def ask(prompt: str) -> None:
         context or rephrase the query, but keep it very polite and friendly, or 
         create a pun with it.
         Keep answers concise and if you don't know the answer, please say so.
+        Address the user directly, as an interactive assistant.
         {project_prompt}
         Please answer this user query: '{user_prompt}'""",
     )
