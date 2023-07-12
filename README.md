@@ -1,8 +1,8 @@
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
-# Mochi-Code
+# Mochi-Code 👋
 
-> An assistant for coding tasks for macOS.
+> An assistant for coding tasks.
 
 The project is in the early stages of development and is intended for
 educational purposes only.
@@ -11,20 +11,21 @@ educational purposes only.
 
 ![CleanShot 2023-07-11 at 21 37 33](https://github.com/MetaphoraStudios/mochi-code/assets/178898/b613cf9d-4ff8-44a6-abc2-1492e3664f15)
 
-## Wishlist
+## Wishlist 🧞‍♂️
 
-- Learn the details of a new project faster
-- Stay up-to-date with changes to your repo
-- Jump to the right place in the codebase
-- Chat with your codebase (including dependencies)
+- Learn the details of a new project faster 📚
+- Stay up-to-date with changes to your repo 🔔
+- Jump to the right place in the codebase 🔦
+- Chat with your codebase (including dependencies) 💬
 
-## Getting Started
+## Getting Started 🚀
 
-### Prerequisites
+### Prerequisites 📋
 
 - Python 3.8 or higher
+- macOS _(happy to support other platforms, but haven't tested yet)_
 
-## Installation
+## Installation 🔧
 
 For now you have to run Mochi from source.
 Mochi uses OpenAI's APIs (for now) and before you start you need to set up your
@@ -60,7 +61,7 @@ Alternatively, you can install as an editable package:
 pip install -e path/to/mochi-code
 ```
 
-## Usage
+## Usage 💻
 
 For now I'm going to use Mochi directly from this repo's `poetry` setup, but you
 can use it from anywhere once it's installed.
@@ -99,7 +100,7 @@ Spot on! 🎯
 
 **Note: Soon, just running `mochi` will start the interactive chat interface.**
 
-## Roadmap
+## Roadmap 🗺
 
 _Semi-prioritised order_
 
@@ -110,25 +111,25 @@ _Semi-prioritised order_
 - Support for other models (e.g. Claude2)
 - (Researchy) Local fine-tuned (open-sourced) models
 
-## Contributing
+## Contributing 🤝
 
-We love contributions from everyone.
+We welcome contributions from anyone.
 Whether you're a seasoned developer or a beginner, your help is always welcome.
 
 Here's how you can contribute:
 
-### Reporting Bugs
+### Reporting Bugs 🐛
 
 If you find a bug, open an issue in the
 [issue tracker](https://github.com/MetaphoraStudios/mochi-code/issues).
 
-### Proposing Features
+### Proposing Features 💡
 
 Have an idea for a new feature? Feel free to open an issue describing your
 feature, how it would be used, and why you think it would be a great addition to
 Mochi.
 
-### Code Contributions
+### Code Contributions 🖥
 
 If you'd like to contribute code, please follow these steps:
 
@@ -144,19 +145,17 @@ Before contributing, please read our
 and
 [Code of Conduct](https://github.com/MetaphoraStudios/mochi-code/blob/main/CODE_OF_CONDUCT.md).
 
-TODO: Add development setup instructions.
-
-## License
+## License 📝
 
 This project is licensed under the MIT License - see the
 [LICENSE.md](https://github.com/MetaphoraStudios/mochi-code/blob/main/LICENSE.md)
 file for details.
 
-## Contact
+## Contact 📧
 
 Join the discussion at [Discord](https://discord.gg/kyy5ncWsMa).
 
-## Acknowledgements
+## Acknowledgements 🙏
 
-We'd like to thank anyone who's used or contributed to Mochi!
-ChatGPT, Bard and Mochi for helping to generate this README.
+Coming soon...
+ChatGPT, Bard and Mochi for helping generate sections of this README.
