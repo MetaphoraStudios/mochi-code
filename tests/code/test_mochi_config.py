@@ -6,7 +6,8 @@ import json
 from unittest import TestCase
 from mochi_code.code import ProjectDetailsWithDependencies
 
-from mochi_code.code.mochi_config import (create_config, load_project_details,
+from mochi_code.code.mochi_config import (PROJECT_DETAILS_FILE_NAME,
+                                          create_config, load_project_details,
                                           search_mochi_config, MOCHI_DIR_NAME,
                                           save_project_details)
 
@@ -158,7 +159,7 @@ class TestCreateConfig(TestCase):
         self.assertTrue(mochi_path.exists())
         self.assertEqual(config_path, mochi_path)
 
-        with open(config_path / "project_details.json",
+        with open(config_path / PROJECT_DETAILS_FILE_NAME,
                   encoding="utf-8") as config_file:
             project_details = json.load(config_file)
 
@@ -186,7 +187,7 @@ class TestSaveAndLoadProjectDetails(TestCase):
         file."""
         mochi_path = self._root_path / MOCHI_DIR_NAME
         mochi_path.mkdir()
-        project_details_path = mochi_path / "project_details.json"
+        project_details_path = mochi_path / PROJECT_DETAILS_FILE_NAME
 
         save_project_details(project_details_path, self._project_details)
         loaded_project_details = load_project_details(project_details_path)

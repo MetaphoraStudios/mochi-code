@@ -6,11 +6,14 @@ import tempfile
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-from mochi_code.code.mochi_config import MOCHI_DIR_NAME, load_project_details
+from mochi_code.code.mochi_config import (get_config_path,
+                                          get_project_details_path,
+                                          load_project_details)
 from mochi_code.commands.exceptions import MochiCannotContinue
 from mochi_code.commands.init import (ProjectDetails,
-                                      ProjectDetailsWithDependencies, init,
-                                      run_init_command, _get_dependencies_list)
+                                      ProjectDetailsWithDependencies,
+                                      _get_dependencies_list, init,
+                                      run_init_command)
 
 
 class TestRunInitCommand(TestCase):
@@ -31,7 +34,7 @@ class TestRunInitCommand(TestCase):
 
         mock_cwd.return_value = start_path
         mock_init.return_value = None
-        mock_search.return_value = start_path / MOCHI_DIR_NAME
+        mock_search.return_value = get_config_path(start_path)
 
         error_pattern = rf".*'{start_path}'."
         with self.assertRaisesRegex(MochiCannotContinue, error_pattern):
@@ -54,7 +57,7 @@ class TestRunInitCommand(TestCase):
 
         mock_cwd.return_value = start_path
         mock_init.return_value = None
-        mock_search.return_value = start_path.parent / MOCHI_DIR_NAME
+        mock_search.return_value = get_config_path(start_path.parent)
 
         run_init_command(argparse.Namespace(force=True))
         mock_init.assert_called_once()
@@ -74,7 +77,7 @@ class TestRunInitCommand(TestCase):
 
         mock_cwd.return_value = start_path
         mock_init.return_value = None
-        mock_search.return_value = start_path / MOCHI_DIR_NAME
+        mock_search.return_value = get_config_path(start_path)
 
         run_init_command(argparse.Namespace(force=True))
         mock_init.assert_not_called()
@@ -104,7 +107,7 @@ class TestInit(TestCase):
         # Create a temporary folder as root
         self._root_dir = tempfile.TemporaryDirectory()
         self._root_path = pathlib.Path(self._root_dir.name)
-        self._mochi_path = self._root_path / MOCHI_DIR_NAME
+        self._mochi_path = get_config_path(self._root_path)
 
     def tearDown(self) -> None:
         self._root_dir.cleanup()
@@ -129,8 +132,8 @@ class TestInit(TestCase):
         mock_dependencies_list.assert_called_once_with(
             mock_project_details.return_value)
 
-        loaded_project_details = load_project_details(self._mochi_path /
-                                                      "project_details.json")
+        project_details_path = get_project_details_path(self._mochi_path)
+        loaded_project_details = load_project_details(project_details_path)
 
         expected_project_details = ProjectDetailsWithDependencies(
             **mock_project_details.return_value.dict(),
@@ -163,7 +166,7 @@ class TestGetDependenciesList(TestCase):
         # Create a temporary folder as root
         self._root_dir = tempfile.TemporaryDirectory()
         self._root_path = pathlib.Path(self._root_dir.name)
-        self._mochi_path = self._root_path / MOCHI_DIR_NAME
+        self._mochi_path = get_config_path(self._root_path)
 
     def tearDown(self) -> None:
         self._root_dir.cleanup()

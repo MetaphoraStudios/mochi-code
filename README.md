@@ -4,57 +4,111 @@
 
 > An assistant for coding tasks for macOS.
 
-Currently this documentation is aspirational.
-The project is in the early stages of development.
+The project is in the early stages of development and is intended for
+educational purposes only.
 
-## Be More Productive
+## Current State
+
+![CleanShot 2023-07-11 at 21 37 33](https://github.com/MetaphoraStudios/mochi-code/assets/178898/b613cf9d-4ff8-44a6-abc2-1492e3664f15)
+
+## Wishlist
 
 - Learn the details of a new project faster
-- Stay up-to-date with important changes
+- Stay up-to-date with changes to your repo
 - Jump to the right place in the codebase
-- Pair program any time, anywhere
+- Chat with your codebase (including dependencies)
 
 ## Getting Started
 
 ### Prerequisites
 
 - Python 3.8 or higher
-- pip
 
-### Installation
+## Installation
 
-Use pip to install Mochi:
+For now you have to run Mochi from source.
+Mochi uses OpenAI's APIs (for now) and before you start you need to set up your
+OpenAI API key. Create a file called `.keys` in the root of the project:
 
 ```bash
-pip install -g mochi-code
+OPENAI_API_KEY="sk-your-key-here"
 ```
 
-_(not implemented yet)_ Setup your OpenAI API key:
+Mochi-Code should be published to PyPI soon, but for now you can install it from
+source.
+
+### Install whl file
+
+From `mochi-code` root directory:
 
 ```bash
-mochi --save-openai-key "<your openai api key>"
+poetry build
+```
+
+The command above creates a whl file in the dist directory which you can install
+with pip in a project you'd like to use Mochi in:
+
+```bash
+pip install dist/mochi_code-0.1.0-py3-none-any.whl # version my diverge!
+```
+
+### Install as an editable package
+
+Alternatively, you can install as an editable package:
+
+```bash
+pip install -e path/to/mochi-code
 ```
 
 ## Usage
 
-Here is a simple example of how to use Mochi:
+For now I'm going to use Mochi directly from this repo's `poetry` setup, but you
+can use it from anywhere once it's installed.
+
+You can ask Mochi any coding questions straight away:
 
 ```bash
-mochi ask "What changed since last week?"
+poetry run mochi ask "How do I install retry?"
+
+# real output, although each run will be different
+> "Answer: You can install Retry using your package manager. For example, if
+   you're using npm, you can run this command in your terminal: `npm install
+   retry`%"
 ```
 
-And you can get better results for your projects if you first initialize Mochi
-for your project root:
+But you will notice this likely doesn't match quite what you're looking for.
+That's because Mochi needs to learn about your project first.  
+You can do this by initializing Mochi in your project root:
 
 ```bash
-# At your project root
-mochi init
+poetry run mochi init
 ```
 
-👆 let's Mochi know more about your project and improves the prompts when asking
-questions.
+Running the same command again should give you a better result:
+
+```bash
+poetry run mochi ask "How do I install retry?"
+
+# real output, although each run will be different
+> "Answer: You can install retry easily with poetry. Use the command \"poetry
+   add retry2\" in your project directory and it will be installed in your
+   virtual environment.%"
+```
+
+Spot on! 🎯
 
 **Note: Soon, just running `mochi` will start the interactive chat interface.**
+
+## Roadmap
+
+_Semi-prioritised order_
+
+- Chat mode (similar to `ask` command but goes on forever)
+- Access to the actual code
+- Access to git history
+- Access to the documentation for all dependencies
+- Support for other models (e.g. Claude2)
+- (Researchy) Local fine-tuned (open-sourced) models
 
 ## Contributing
 
