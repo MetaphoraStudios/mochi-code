@@ -10,7 +10,7 @@
     <!-- Text content -->
     <h1>Mochi-Code 👋</h1>
 
-    > An assistant for coding tasks.
+  An assistant for coding tasks.
 
 The project is in the early stages of development and is intended for
 educational purposes only.
