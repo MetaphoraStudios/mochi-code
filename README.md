@@ -1,11 +1,21 @@
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
-# Mochi-Code 👋
+<div style="display: flex; align-items: center;">
+   <div style="flex: 1;">
+    <!-- Image -->
+    <img src="https://github.com/MetaphoraStudios/mochi-code/assets/178898/441777f2-1670-4f7b-81a4-690f6056a1b3"
+       alt="Mochi Coder" width="200" align="left">
+  </div>
+  <div style="flex: 1;">
+    <!-- Text content -->
+    <h1>Mochi-Code 👋</h1>
 
-> An assistant for coding tasks.
-
-The project is in the early stages of development and is intended for
-educational purposes only.
+    > An assistant for coding tasks.
+    
+    The project is in the early stages of development and is intended for
+    educational purposes only.
+  </div>
+</div>
 
 ## Current State
 
