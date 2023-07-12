@@ -12,8 +12,9 @@
 
     > An assistant for coding tasks.
 
-   The project is in the early stages of development and is intended for
-    educational purposes only.
+The project is in the early stages of development and is intended for
+educational purposes only.
+
   </div>
 </div>
 
@@ -29,6 +30,8 @@
 - Stay up-to-date with changes to your repo 🔔
 - Jump to the right place in the codebase 🔦
 - Chat with your codebase (including dependencies) 💬
+
+<br/>
 
 ## Getting Started 🚀
 
@@ -112,6 +115,8 @@ Spot on! 🎯
 
 **Note: Soon, just running `mochi` will start the interactive chat interface.**
 
+<br/>
+
 ## Roadmap 🗺
 
 _Semi-prioritised order_
@@ -122,6 +127,8 @@ _Semi-prioritised order_
 - Access to the documentation for all dependencies
 - Support for other models (e.g. Claude2)
 - (Researchy) Local fine-tuned (open-sourced) models
+
+<br/>
 
 ## Contributing 🤝
 
